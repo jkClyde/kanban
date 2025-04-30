@@ -1,0 +1,74 @@
+export default function SummaryCards({
+  totalProjects,
+  completedProjects,
+  totalBudget,
+  totalSpent,
+  avgCompletion,
+  taskCompletionPercentage,
+  totalTasks,
+  completedTasks
+}) {
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      {/* Total Projects Card */}
+      <div className="bg-white rounded-lg shadow-md p-6">
+        <div className="flex justify-between items-center">
+          <h3 className="text-gray-500 text-sm font-medium">Total Projects</h3>
+          <span className="bg-blue-100 text-blue-800 text-xs font-medium rounded-full px-2.5 py-1">All</span>
+        </div>
+        <p className="text-3xl font-bold text-gray-800 mt-2">{totalProjects}</p>
+        <div className="flex items-center mt-4 text-sm text-gray-500">
+          <span className="text-green-500 font-medium">{completedProjects} completed</span>
+          <span className="mx-2">•</span>
+          <span className="text-yellow-500 font-medium">{totalProjects - completedProjects} ongoing</span>
+        </div>
+      </div>
+      
+      {/* Budget Utilization Card */}
+      <div className="bg-white rounded-lg shadow-md p-6">
+        <div className="flex justify-between items-center">
+          <h3 className="text-gray-500 text-sm font-medium">Budget Utilization</h3>
+          <span className="bg-green-100 text-green-800 text-xs font-medium rounded-full px-2.5 py-1">Finance</span>
+        </div>
+        <p className="text-3xl font-bold text-gray-800 mt-2">${totalSpent.toLocaleString()}</p>
+        <div className="flex items-center mt-4 text-sm text-gray-500">
+          <span className="text-gray-600 font-medium">of ${totalBudget.toLocaleString()} total budget</span>
+          <span className="mx-2">•</span>
+          <span className={`${totalBudget > 0 && totalSpent/totalBudget < 0.8 ? 'text-green-500' : 'text-yellow-500'} font-medium`}>
+            {totalBudget > 0 ? Math.round((totalSpent/totalBudget) * 100) : 0}%
+          </span>
+        </div>
+      </div>
+      
+      {/* Average Completion Card */}
+      <div className="bg-white rounded-lg shadow-md p-6">
+        <div className="flex justify-between items-center">
+          <h3 className="text-gray-500 text-sm font-medium">Average Completion</h3>
+          <span className="bg-purple-100 text-purple-800 text-xs font-medium rounded-full px-2.5 py-1">Progress</span>
+        </div>
+        <p className="text-3xl font-bold text-gray-800 mt-2">{Math.round(avgCompletion)}%</p>
+        <div className="flex items-center mt-4">
+          <div className="w-full bg-gray-200 rounded-full h-2">
+            <div className="bg-purple-600 h-2 rounded-full" style={{ width: `${avgCompletion}%` }}></div>
+          </div>
+        </div>
+      </div>
+      
+      {/* Total Tasks Card */}
+      <div className="bg-white rounded-lg shadow-md p-6">
+        <div className="flex justify-between items-center">
+          <h3 className="text-gray-500 text-sm font-medium">Total Tasks</h3>
+          <span className="bg-red-100 text-red-800 text-xs font-medium rounded-full px-2.5 py-1">Tasks</span>
+        </div>
+        <p className="text-3xl font-bold text-gray-800 mt-2">
+          {completedTasks} / {totalTasks}
+        </p>
+        <div className="flex items-center mt-4 text-sm text-gray-500">
+          <span className="text-green-500 font-medium">
+            {taskCompletionPercentage}% completed
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+}
