@@ -2,7 +2,7 @@ import Project from "@/models/Project";
 import connectDB from "@/config/database";
 import { ProjectDashboard } from "@/components/ProjectDashboard/ProjectDashboard";
 
-const Fetchdashboard = async () => {
+const page = async () => {
   await connectDB();
   
   // Fetch projects and convert to plain objects
@@ -14,5 +14,5 @@ const Fetchdashboard = async () => {
   return <ProjectDashboard initialProjects={sanitizedProjects} />;
 }
 
-export default Fetchdashboard;
+export default page;
 
