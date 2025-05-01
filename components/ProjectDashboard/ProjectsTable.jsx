@@ -1,128 +1,257 @@
+import { FaEye, FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import Link from "next/link";
+import { useState, useEffect, useRef } from "react";
+
 export default function ProjectsTable({ projects, filteredProjects }) {
-    return (
-      <div className="bg-white shadow-md rounded-lg overflow-hidden mb-8">
-        <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Project</th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Completion</th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Budget</th>
-                {projects.some(p => p.team) && (
-                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Team</th>
-                )}
-                {projects.some(p => p.startDate) && (
-                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Timeline</th>
-                )}
-                <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {filteredProjects.length > 0 ? filteredProjects.map((project) => (
-                <tr key={project._id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="flex items-center">
-                      <div>
-                        <div className="text-sm font-medium text-gray-900">{project.name}</div>
-                        <div className="text-sm text-gray-500">{project.description}</div>
-                        {project.tags && (
-                          <div className="flex flex-wrap gap-1 mt-1">
-                            {project.tags.map((tag, index) => (
-                              <span key={index} className="bg-gray-100 px-2 py-0.5 rounded-full text-xs text-gray-800">
-                                {tag}
-                              </span>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                      project.status === 'Completed' ? 'bg-green-100 text-green-800' : 
-                      project.status === 'In Progress' ? 'bg-yellow-100 text-yellow-800' :
-                      project.status === 'Planning' ? 'bg-blue-100 text-blue-800' :
-                      project.status === 'On Hold' ? 'bg-purple-100 text-purple-800' :
-                      'bg-red-100 text-red-800'
-                    }`}>
-                      {project.status}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="flex items-center">
-                      <span className="text-sm text-gray-900 mr-2">{project.completion || 0}%</span>
-                      <div className="w-24 bg-gray-200 rounded-full h-2">
-                        <div 
-                          className={`h-2 rounded-full ${
-                            (project.completion || 0) >= 90 ? 'bg-green-500' :
-                            (project.completion || 0) >= 50 ? 'bg-yellow-500' : 'bg-red-500'
-                          }`}
-                          style={{ width: `${project.completion || 0}%` }}
-                        ></div>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    {project.budget ? (
-                      <>
-                        <div className="text-sm text-gray-900">
-                          ${(project.spent || 0).toLocaleString()} / ${project.budget.toLocaleString()}
-                        </div>
-                        <div className="text-xs text-gray-500">
-                          {project.budget > 0 ? Math.round(((project.spent || 0) / project.budget) * 100) : 0}% used
-                        </div>
-                      </>
-                    ) : (
-                      <span className="text-sm text-gray-500">Not specified</span>
-                    )}
-                  </td>
-                  {projects.some(p => p.team) && (
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      {project.team && project.team.length > 0 ? (
-                        <div className="flex -space-x-2">
-                          {project.team.map((member, index) => (
-                            <div key={index} className="w-8 h-8 rounded-full bg-indigo-100 border-2 border-white flex items-center justify-center">
-                              <span className="text-xs font-medium text-indigo-800">
-                                {typeof member === 'string' ? member.charAt(0) : index + 1}
-                              </span>
-                            </div>
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const [projectsPerPage] = useState(10);
+  
+  // Get current projects
+  const indexOfLastProject = currentPage * projectsPerPage;
+  const indexOfFirstProject = indexOfLastProject - projectsPerPage;
+  const currentProjects = filteredProjects.slice(indexOfFirstProject, indexOfLastProject);
+  
+  // Calculate total pages
+  const totalPages = Math.ceil(filteredProjects.length / projectsPerPage);
+  
+  // Reset to first page when filteredProjects changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [filteredProjects]);
+  
+  // Reference for table container
+  const tableRef = useRef(null);
+  
+  // Page change handler with smooth scroll to top of table
+  const paginate = (pageNumber) => {
+    // Ensure page number is within valid range
+    if (pageNumber >= 1 && pageNumber <= totalPages) {
+      setCurrentPage(pageNumber);
+      
+      // Smooth scroll to the top of the table
+      if (tableRef.current) {
+        tableRef.current.scrollIntoView({ 
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }
+    }
+  };
+
+  return (
+    <div ref={tableRef} className="bg-white shadow-md rounded-lg overflow-hidden mb-8">
+      <div className="overflow-x-auto">
+        <table className="min-w-full divide-y divide-gray-200">
+          {/* Table Header */}
+          <thead className="bg-sidebar text-white">
+            <tr>
+              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Project</th>
+              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Status</th>
+              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Priority</th>
+              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Completion</th>
+              {projects.some(p => p.startDate) && (
+                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Timeline</th>
+              )}
+              <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-white uppercase tracking-wider">Actions</th>
+            </tr>
+          </thead>
+
+          {/* Contents */}
+          <tbody className="bg-white divide-y divide-gray-200">
+            {currentProjects.length > 0 ? currentProjects.map((project) => (
+              <tr key={project._id} className="hover:bg-gray-50">
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <div className="flex items-center">
+                    <div>
+                      <div className="text-sm font-medium text-gray-900">{project.name}</div>
+                      <div className="text-sm text-gray-500">{project.description}</div>
+                      {project.tags && (
+                        <div className="flex flex-wrap gap-1 mt-1">
+                          {project.tags.map((tag, index) => (
+                            <span key={index} className="bg-gray-100 px-2 py-0.5 rounded-[5px] text-xs text-gray-800">
+                              {tag}
+                            </span>
                           ))}
                         </div>
-                      ) : (
-                        <span className="text-sm text-gray-500">No team assigned</span>
                       )}
-                    </td>
-                  )}
-                  {projects.some(p => p.startDate) && (
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {project.startDate ? (
-                        <>
-                          <div>Start: {new Date(project.startDate).toLocaleDateString()}</div>
-                          {project.endDate && (
-                            <div>End: {new Date(project.endDate).toLocaleDateString()}</div>
-                          )}
-                        </>
-                      ) : (
-                        <span>No dates specified</span>
-                      )}
-                    </td>
-                  )}
-                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    <button className="text-indigo-600 hover:text-indigo-900 mr-4">Edit</button>
-                    <button className="text-red-600 hover:text-red-900">Delete</button>
+                    </div>
+                  </div>
+                </td>
+
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-[5px] ${
+                    project.status === 'Completed' ? 'bg-green_bg text-green-100' : 
+                    project.status === 'In Progress' ? 'bg-yellow_bg text-yellow-100' :
+                    project.status === 'Planning' ? 'bg-blue_bg text-blue-100' :
+                    project.status === 'On Hold' ? 'bg-purple_bg text-purple-100' :
+                    'bg-red-100 text-red-800'
+                  }`}>
+                    {project.status}
+                  </span>
+                </td>
+
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-[5px] ${
+                      project.priority === 'High' ? 'bg-red_bg text-red-100' : 
+                      project.priority === 'Medium' ? 'bg-yellow_bg text-yellow-100' :
+                      project.priority === 'Low' ? 'bg-blue_bg text-blue-100' :
+                      project.priority === 'Normal' ? 'bg-purple_bg text-purple-100' :
+                      'bg-green-100 text-green-800'
+                    }`}>
+                      {project.priority}
+                    </span>
+                </td>
+
+              
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <div className="flex items-center">
+                    <span className="text-sm text-gray-900 mr-2">{project.completion || 0}%</span>
+                    <div className="w-24 bg-gray-200 rounded-[5px] h-2">
+                      <div 
+                        className={`h-2 rounded-[5px] ${
+                          (project.completion || 0) >= 90 ? 'bg-green_bg' :
+                          (project.completion || 0) >= 50 ? 'bg-yellow_bg' : 'bg-red_bg'
+                        }`}
+                        style={{ width: `${project.completion || 0}%` }}
+                      ></div>
+                    </div>
+                  </div>
+                </td>
+         
+           
+                {projects.some(p => p.startDate) && (
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {project.startDate ? (
+                      <>
+                        <div className="font-bold">Start: <span className="font-normal"> {new Date(project.startDate).toLocaleDateString()}</span></div>
+                        {project.targetEndDate && (
+                          <div className="font-bold">Target: <span className="font-normal">{new Date(project.targetEndDate).toLocaleDateString()}</span></div>
+                        )}
+                        
+                        {project.endDate && (
+                          <div>End: {new Date(project.endDate).toLocaleDateString()}</div>
+                        )}
+                      </>
+                    ) : (
+                      <span>No dates specified</span>
+                    )}
                   </td>
-                </tr>
-              )) : (
-                <tr>
-                  <td colSpan="7" className="px-6 py-4 text-center text-sm text-gray-500">
-                    No projects found matching your criteria
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
+                )}
+                <td className="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
+                  <Link href={`/projects/${project._id}`} className="text-purple_bg hover:text-indigo-900 "><FaEye style={{ fontSize: '24px' }} /></Link>
+                </td>
+              </tr>
+            )) : (
+              <tr>
+                <td colSpan="7" className="px-6 py-4 text-center text-sm text-gray-500">
+                  No projects found matching your criteria
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
       </div>
-    );
-  }
+
+      {/* Pagination Controls */}
+      {filteredProjects.length > 0 && (
+        <div className="px-6 py-3 flex items-center justify-between border-t border-gray-200">
+          <div className="flex-1 flex justify-between sm:hidden">
+            <button
+              onClick={() => paginate(currentPage - 1)}
+              disabled={currentPage === 1}
+              className={`relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md ${
+                currentPage === 1 ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white text-gray-700 hover:bg-gray-50'
+              }`}
+            >
+              Previous
+            </button>
+            <button
+              onClick={() => paginate(currentPage + 1)}
+              disabled={currentPage === totalPages}
+              className={`ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md ${
+                currentPage === totalPages ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white text-gray-700 hover:bg-gray-50'
+              }`}
+            >
+              Next
+            </button>
+          </div>
+          
+          <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+            <div>
+              <p className="text-sm text-gray-700">
+                Showing <span className="font-medium">{indexOfFirstProject + 1}</span> to{" "}
+                <span className="font-medium">
+                  {indexOfLastProject > filteredProjects.length ? filteredProjects.length : indexOfLastProject}
+                </span>{" "}
+                of <span className="font-medium">{filteredProjects.length}</span> results
+              </p>
+            </div>
+            <div>
+              <nav className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                <button
+                  onClick={() => paginate(currentPage - 1)}
+                  disabled={currentPage === 1}
+                  className={`relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium ${
+                    currentPage === 1 ? 'text-gray-300 cursor-not-allowed' : 'text-gray-500 hover:bg-gray-50'
+                  }`}
+                >
+                  <span className="sr-only">Previous</span>
+                  <FaChevronLeft className="h-5 w-5" aria-hidden="true" />
+                </button>
+                
+                {/* Page Numbers */}
+                {[...Array(totalPages).keys()].map(number => {
+                  // For larger page sets, show limited page numbers with ellipsis
+                  if (totalPages <= 7 || 
+                      number === 0 || 
+                      number === totalPages - 1 || 
+                      Math.abs(currentPage - (number + 1)) <= 1) {
+                    return (
+                      <button
+                        key={number + 1}
+                        onClick={() => paginate(number + 1)}
+                        className={`relative inline-flex items-center px-4 py-2 border text-sm font-medium ${
+                          currentPage === number + 1
+                            ? 'z-10 bg-indigo-50 border-purple_bg text-purple_bg'
+                            : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50'
+                        }`}
+                      >
+                        {number + 1}
+                      </button>
+                    );
+                  } else if (
+                    (currentPage < 5 && number === 5) || 
+                    (currentPage > totalPages - 4 && number === totalPages - 6) ||
+                    (currentPage >= 5 && currentPage <= totalPages - 4 && (number === currentPage - 3 || number === currentPage + 1))
+                  ) {
+                    return (
+                      <span
+                        key={number + 1}
+                        className="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700"
+                      >
+                        ...
+                      </span>
+                    );
+                  }
+                  return null;
+                })}
+                
+                <button
+                  onClick={() => paginate(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                  className={`relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium ${
+                    currentPage === totalPages ? 'text-gray-300 cursor-not-allowed' : 'text-gray-500 hover:bg-gray-50'
+                  }`}
+                >
+                  <span className="sr-only">Next</span>
+                  <FaChevronRight className="h-5 w-5" aria-hidden="true" />
+                </button>
+              </nav>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}

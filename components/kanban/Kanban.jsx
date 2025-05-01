@@ -9,7 +9,7 @@ export const Kanban = async () => {
   const Cards = await Card.find({}).lean();
 
   return (
-    <div className="w-full text-neutral-50 flex justify-center items-center background-white">
+    <div className="w-full text-neutral-50 flex justify-center items-center ">
       <Board initialCards={Cards}/>
     </div>
   );

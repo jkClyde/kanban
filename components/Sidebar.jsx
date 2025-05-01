@@ -48,7 +48,7 @@ export const Sidebar = () => {
   return (
     <motion.nav
       layout
-      className="sticky top-0 h-screen shrink-0 bg-[#171717] p-2 flex flex-col justify-between"
+      className="sticky top-0 h-screen shrink-0 bg-sidebar p-2 flex flex-col justify-between"
       style={{
         width: open ? "236px" : "fit-content",
       }}
@@ -59,27 +59,35 @@ export const Sidebar = () => {
         </div>
 
         <div className="space-y-1">
+          <Link href={"/"}>
+            <Option
+                Icon={FiHome}
+                title="Dashboard"
+                selected={selected}
+                setSelected={setSelected}
+                open={open}
+              />
+          </Link>
+
+          <Link href="/projects">
+            <Option
+              Icon={FiMonitor}
+              title="Projects"
+              selected={selected}
+              setSelected={setSelected}
+              open={open}
+            />
+          </Link>
+         
+         <Link href="/tasks">
           <Option
-            Icon={FiHome}
-            title="Dashboard"
-            selected={selected}
-            setSelected={setSelected}
-            open={open}
-          />
-          <Option
-            Icon={FiMonitor}
-            title="Projects"
-            selected={selected}
-            setSelected={setSelected}
-            open={open}
-          />
-          <Option
-            Icon={FaTasks}
-            title="Daily Tasks"
-            selected={selected}
-            setSelected={setSelected}
-            open={open}
-          />
+              Icon={FaTasks}
+              title="Tasks"
+              selected={selected}
+              setSelected={setSelected}
+              open={open}
+            />
+         </Link>
           <Option
             Icon={FiBarChart}
             title="Analytics"
@@ -214,7 +222,7 @@ export const Sidebar = () => {
   );
 };
 
-const Option = ({ Icon, title, selected, setSelected, open, notifs }) => {
+const Option = ({ Icon, title, selected, setSelected, open, notifs , link}) => {
   return (
     <motion.button
       layout

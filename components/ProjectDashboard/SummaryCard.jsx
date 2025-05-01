@@ -9,26 +9,26 @@ export default function SummaryCards({
   completedTasks
 }) {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
       {/* Total Projects Card */}
       <div className="bg-white rounded-lg shadow-md p-6">
         <div className="flex justify-between items-center">
           <h3 className="text-gray-500 text-sm font-medium">Total Projects</h3>
-          <span className="bg-blue-100 text-blue-800 text-xs font-medium rounded-full px-2.5 py-1">All</span>
+          <span className="bg-blue_bg text-blue-100 text-xs font-medium rounded-[5px] px-2.5 py-1">All</span>
         </div>
         <p className="text-3xl font-bold text-gray-800 mt-2">{totalProjects}</p>
         <div className="flex items-center mt-4 text-sm text-gray-500">
-          <span className="text-green-500 font-medium">{completedProjects} completed</span>
+          <span className="text-green_bg font-medium">{completedProjects} completed</span>
           <span className="mx-2">•</span>
-          <span className="text-yellow-500 font-medium">{totalProjects - completedProjects} ongoing</span>
+          <span className="text-yellow_bg font-medium">{totalProjects - completedProjects} ongoing</span>
         </div>
       </div>
       
       {/* Budget Utilization Card */}
-      <div className="bg-white rounded-lg shadow-md p-6">
+      {/* <div className="bg-white rounded-lg shadow-md p-6">
         <div className="flex justify-between items-center">
           <h3 className="text-gray-500 text-sm font-medium">Budget Utilization</h3>
-          <span className="bg-green-100 text-green-800 text-xs font-medium rounded-full px-2.5 py-1">Finance</span>
+          <span className="bg-green_bg text-green-100 text-xs font-medium rounded-[5px] px-2.5 py-1">Finance</span>
         </div>
         <p className="text-3xl font-bold text-gray-800 mt-2">${totalSpent.toLocaleString()}</p>
         <div className="flex items-center mt-4 text-sm text-gray-500">
@@ -38,18 +38,18 @@ export default function SummaryCards({
             {totalBudget > 0 ? Math.round((totalSpent/totalBudget) * 100) : 0}%
           </span>
         </div>
-      </div>
+      </div> */}
       
       {/* Average Completion Card */}
       <div className="bg-white rounded-lg shadow-md p-6">
         <div className="flex justify-between items-center">
           <h3 className="text-gray-500 text-sm font-medium">Average Completion</h3>
-          <span className="bg-purple-100 text-purple-800 text-xs font-medium rounded-full px-2.5 py-1">Progress</span>
+          <span className="bg-purple_bg text-purple-100 text-xs font-medium rounded-[5px] px-2.5 py-1">Progress</span>
         </div>
         <p className="text-3xl font-bold text-gray-800 mt-2">{Math.round(avgCompletion)}%</p>
         <div className="flex items-center mt-4">
-          <div className="w-full bg-gray-200 rounded-full h-2">
-            <div className="bg-purple-600 h-2 rounded-full" style={{ width: `${avgCompletion}%` }}></div>
+          <div className="w-full bg-gray-200 rounded-[5px] h-2">
+            <div className="bg-purple_bg h-2 rounded-[5px]" style={{ width: `${avgCompletion}%` }}></div>
           </div>
         </div>
       </div>
@@ -58,7 +58,7 @@ export default function SummaryCards({
       <div className="bg-white rounded-lg shadow-md p-6">
         <div className="flex justify-between items-center">
           <h3 className="text-gray-500 text-sm font-medium">Total Tasks</h3>
-          <span className="bg-red-100 text-red-800 text-xs font-medium rounded-full px-2.5 py-1">Tasks</span>
+          <span className="bg-pink_bg text-red-100 text-xs font-medium rounded-[5px] px-2.5 py-1">Tasks</span>
         </div>
         <p className="text-3xl font-bold text-gray-800 mt-2">
           {completedTasks} / {totalTasks}

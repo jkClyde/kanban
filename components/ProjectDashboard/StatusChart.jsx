@@ -1,10 +1,10 @@
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
 
 const statusColors = {
-  'Completed': '#81C784',
+  'Completed': '#2D6A4F',
   'In Progress': '#FFB74D',
-  'Planning': '#64B5F6',
-  'On Hold': '#BA68C8',
+  'Planning': '#2A4E6C',
+  'On Hold': '#A45D7A',
   'Canceled': '#EF5350'
 };
 

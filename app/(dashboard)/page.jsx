@@ -15,3 +15,11 @@ const page = async () => {
 }
 
 export default page;
+
+/*
+  #305335F
+  #090F13
+  #153B47
+  #3D606E
+  #09191F
+*/ 

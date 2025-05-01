@@ -50,15 +50,15 @@ export const ProjectDashboard = ({ initialProjects }) => {
   const taskCompletionPercentage = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
 
   return (
-    <div className="bg-gray-100 min-h-screen">
-    <header className="bg-indigo-600 text-white shadow-lg">
-      <div className="container mx-auto px-4 py-6">
+    <div className="bg-gray-100 min-h-screen w-full py-10">
+    <header className=" text-header">
+      <div className="container mx-auto px-4 pb-[15px]">
         <h1 className="text-3xl font-bold">Project Management Dashboard</h1>
-        <p className="mt-1 text-indigo-100">Track and manage your projects efficiently</p>
+        <p className="mt-1 text-text">Track and manage your projects efficiently</p>
       </div>
     </header>
       
-      <main className="container mx-auto px-4 py-8">
+      <main className="container mx-auto px-4 py-[15px]">
         <SummaryCards 
           totalProjects={totalProjects}
           completedProjects={completedProjects}
@@ -70,12 +70,6 @@ export const ProjectDashboard = ({ initialProjects }) => {
           completedTasks={completedTasks}
         />
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-          <StatusChart projects={projects} />
-          <BudgetChart budgetData={budgetData} />
-          <ProgressChart projects={projects} />
-        </div>
-        
         <DashboardFilters 
           filterStatus={filterStatus}
           setFilterStatus={setFilterStatus}
@@ -88,6 +82,13 @@ export const ProjectDashboard = ({ initialProjects }) => {
           projects={projects}
           filteredProjects={filteredProjects}
         />
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+          <StatusChart projects={projects} />
+          <ProgressChart projects={projects} />
+        </div>
+        
+       
         
         <h2 className="text-xl font-bold text-gray-800 mb-4">Project Cards</h2>
         <ProjectCards filteredProjects={filteredProjects} />

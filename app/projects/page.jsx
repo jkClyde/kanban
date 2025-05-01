@@ -1,7 +1,7 @@
 'use server'
 import connectDB from "@/config/database"
 import Project from '@/models/Project'
-import Card from "@/models/Card"
+import Link from "next/link"
 
 export const Projects = async () => { 
   await connectDB();
@@ -10,35 +10,36 @@ export const Projects = async () => {
   const projects = await Project.find({}).lean();
   
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-2xl font-bold mb-6">Projects</h1>
+    <div className="w-full mx-auto px-8 py-8 back bg-white">
+      <h1 className="text-2xl font-bold mb-6 text-header">Projects</h1>
       
       {projects.length === 0 ? (
         <p className="text-gray-500">No projects found.</p>
       ) : (
         <div className="grid gap-4">
           {projects.map((project) => (
-            <div key={project._id} className="bg-[#303030] p-4 rounded-lg shadow">
+            <Link key={project._id} href={`/projects/${project._id}`} className="w-full">
+                <div  className="bg-white p-4 rounded-lg shadow-lg border-solid border-header">
               <div className="flex justify-between">
-                <h2 className="text-xl font-semibold">{project.name}</h2>
+                <h2 className="text-xl  text-header font-semibold">{project.name}</h2>
                 <span className={`px-2 py-1 rounded-full text-xs ${
-                  project.status === 'Completed' ? 'bg-green-100 text-green-800' : 
-                  project.status === 'In Progress' ? 'bg-yellow-100 text-yellow-800' :
-                  project.status === 'Planning' ? 'bg-blue-100 text-blue-800' :
-                  project.status === 'On Hold' ? 'bg-purple-100 text-purple-800' :
+                  project.status === 'Completed' ? 'bg-green_bg text-green-100' : 
+                  project.status === 'In Progress' ? 'bg-yellow_bg text-yellow-100' :
+                  project.status === 'Planning' ? 'bg-blue_bg text-blue-100' :
+                  project.status === 'On Hold' ? 'bg-purple_bg text-purple-100' :
                   'bg-red-100 text-red-800'
                 }`}>
                   {project.status}
                 </span>
               </div>
               
-              <p className="text-white mt-2">{project.description}</p>
+              <p className="text-header mt-2">{project.description}</p>
               
               <div className="mt-4">
-                <div className="text-sm text-white">Completion: {project.completion}%</div>
+                <div className="text-sm text-header">Completion: {project.completion}%</div>
                 <div className="w-full bg-gray-200 rounded-full h-2 mt-1">
                   <div 
-                    className="bg-blue-500 h-2 rounded-full" 
+                    className="bg-blue_bg h-2 rounded-full" 
                     style={{ width: `${project.completion}%` }}
                   ></div>
                 </div>
@@ -52,6 +53,7 @@ export const Projects = async () => {
                 ))}
               </div>
             </div>
+            </Link>
           ))}
         </div>
       )}
