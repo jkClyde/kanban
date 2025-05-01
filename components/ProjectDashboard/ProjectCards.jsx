@@ -118,7 +118,7 @@ export default function ProjectCards({ filteredProjects }) {
       {/* "See more projects" link - only shown if there are more than 6 projects */}
       {hasMoreProjects && (
         <div className="flex justify-center mt-6">
-          <Link href="/projects" className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-purple_bg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+          <Link href="/projects" className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-sidebar hover:bg-indigo-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
             See more projects
           </Link>
         </div>

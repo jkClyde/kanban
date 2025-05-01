@@ -155,7 +155,7 @@ export default function ProjectsTable({ projects, filteredProjects }) {
 
       {/* Pagination Controls */}
       {filteredProjects.length > 0 && (
-        <div className="px-6 py-3 flex items-center justify-between border-t border-gray-200">
+        <div className="px-6 py-3 flex items-center justify-between border-t border-gray-200 bg-sidebar">
           <div className="flex-1 flex justify-between sm:hidden">
             <button
               onClick={() => paginate(currentPage - 1)}
@@ -179,7 +179,7 @@ export default function ProjectsTable({ projects, filteredProjects }) {
           
           <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
             <div>
-              <p className="text-sm text-gray-700">
+              <p className="text-sm text-white">
                 Showing <span className="font-medium">{indexOfFirstProject + 1}</span> to{" "}
                 <span className="font-medium">
                   {indexOfLastProject > filteredProjects.length ? filteredProjects.length : indexOfLastProject}
