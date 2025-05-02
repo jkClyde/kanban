@@ -197,20 +197,7 @@ export default function EditProjectModal({ project, isOpen, setIsOpen }) {
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             {/* Completion */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Completion (%)
-              </label>
-              <input
-                type="number"
-                name="completion"
-                value={formData.completion}
-                onChange={handleChange}
-                min="0"
-                max="100"
-                className="w-full p-2 border border-gray-300 rounded-md focus:ring-purple_bg focus:border-purple_bg"
-              />
-            </div>
+           
             
             {/* Priority */}
             <div>
@@ -275,7 +262,7 @@ export default function EditProjectModal({ project, isOpen, setIsOpen }) {
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             {/* Git Repo */}
-            {/* <div>
+            <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Git Repository URL
               </label>
@@ -286,10 +273,10 @@ export default function EditProjectModal({ project, isOpen, setIsOpen }) {
                 onChange={handleChange}
                 className="w-full p-2 border border-gray-300 rounded-md focus:ring-purple_bg focus:border-purple_bg"
               />
-            </div> */}
+            </div> 
             
             {/* Live Site */}
-            {/* <div>
+             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Live Site URL
               </label>
@@ -300,7 +287,7 @@ export default function EditProjectModal({ project, isOpen, setIsOpen }) {
                 onChange={handleChange}
                 className="w-full p-2 border border-gray-300 rounded-md focus:ring-purple_bg focus:border-purple_bg"
               />
-            </div> */}
+            </div>
           </div>
           
      

@@ -62,8 +62,8 @@ export default function ProjectCards({ filteredProjects }) {
                   )}
                   {project.startDate && (
                     <div>
-                      <div className="text-gray-500">Timeline</div>
-                      <div className="font-medium">
+                      <div className="text-header">Timeline</div>
+                      <div className="font-medium text-header">
                         {new Date(project.startDate).toLocaleDateString().split('/').slice(0, 2).join('/')}
                         {project.endDate && ` - ${new Date(project.endDate).toLocaleDateString().split('/').slice(0, 2).join('/')}`}
                       </div>
