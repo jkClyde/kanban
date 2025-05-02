@@ -7,7 +7,8 @@ export default function DashboardFilters({
   setFilterStatus,
   searchTerm,
   setSearchTerm,
-  statusCounts
+  statusCounts,
+  services
 }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   
@@ -15,6 +16,8 @@ export default function DashboardFilters({
   const closeModal = () => {
     setIsModalOpen(false);
   };
+
+  console.log("Services in DashboardFilters:", services); // Debugging line
   
   return (
     <>
@@ -85,7 +88,7 @@ export default function DashboardFilters({
               </button>
             </div>
             
-            <ProjectForm onClose={closeModal} />
+            <ProjectForm onClose={closeModal} services={services}/>
           </div>
         </div>
       )}

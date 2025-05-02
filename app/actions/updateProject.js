@@ -3,14 +3,14 @@ import connectDB from '@/config/database';
 import Project from '@/models/Project';
 import { revalidatePath } from 'next/cache';
 
-async function addProject(formData) {
+async function updateProject(id, formData) {
   try {
     await connectDB();
-
+    
     // Access all values for array fields
     const tags = formData.getAll('tags');
 
-    // Create project data object
+    // Create project data object with updated fields
     const projectData = {
       name: formData.get('name'),
       description: formData.get('description'),
@@ -26,19 +26,29 @@ async function addProject(formData) {
       // techStack: formData.get('techStack')
     };
 
-    const newProject = new Project(projectData);
-    await newProject.save();
+    // Find and update the project
+    const updatedProject = await Project.findByIdAndUpdate(id, projectData, { 
+      new: true, // Return the updated document
+      runValidators: true // Run Mongoose validation
+    });
 
-    // Revalidate the path to update the UI
+    if (!updatedProject) {
+      return { 
+        success: false, 
+        error: 'Project not found' 
+      };
+    }
+
+    // Revalidate paths to update the UI
     revalidatePath('/projects');
+    revalidatePath(`/projects/${id}`);
     
-    // Convert MongoDB ObjectId to string before returning
     return { 
       success: true, 
-      projectId: newProject._id.toString() 
+      projectId: updatedProject._id.toString() 
     };
   } catch (error) {
-    console.error('Error adding project:', error);
+    console.error('Error updating project:', error);
     return { 
       success: false, 
       error: error.message 
@@ -46,4 +56,4 @@ async function addProject(formData) {
   }
 }
 
-export default addProject;
+export default updateProject;

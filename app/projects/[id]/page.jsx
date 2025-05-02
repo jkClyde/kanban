@@ -4,6 +4,7 @@ import Project from '@/models/Project';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { formatDistanceToNow } from 'date-fns';
+import ProjectActions from './ProjectAction';
 
 // Function to get a single project by ID
 async function getProject(id) {
@@ -72,7 +73,7 @@ export default async function ProjectPage({ params }) {
     <div className="w-full h-full mx-auto px-8 py-8 bg-white">
       {/* Back button */}
       <div className='flex flex-col gap-[15px] mb-6'>
-      <Link 
+      {/* <Link 
           href="/" 
           className="inline-flex items-center text-sm text-purple_bg hover:text-indigo-700 "
         >
@@ -80,7 +81,7 @@ export default async function ProjectPage({ params }) {
             <path fillRule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clipRule="evenodd" />
           </svg>
           Back to Dashboard
-        </Link>
+        </Link> */}
 
         <Link 
           href="/projects" 
@@ -89,7 +90,7 @@ export default async function ProjectPage({ params }) {
           <svg className="h-4 w-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
             <path fillRule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clipRule="evenodd" />
           </svg>
-          Back to Projects
+          Projects
         </Link>
       </div>
       
@@ -109,8 +110,10 @@ export default async function ProjectPage({ params }) {
             </span>
           </div>
         </div>
+
+        <ProjectActions project={project} />
         
-        <div className="flex gap-2">
+        {/* <div className="flex gap-2">
           <Link
             href={`/projects/${project._id}/edit`}
             className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none"
@@ -128,7 +131,7 @@ export default async function ProjectPage({ params }) {
             </svg>
             Delete
           </button>
-        </div>
+        </div> */}
       </div>
       
       {/* Project Details */}
@@ -143,22 +146,25 @@ export default async function ProjectPage({ params }) {
             <h3 className="text-sm font-medium text-gray-500 mb-2">Description</h3>
             <p className="text-gray-900 whitespace-pre-line">{project.description || 'No description provided.'}</p>
           </div>
-          
-          {/* Tech Stack */}
-          <div className="mb-6">
-            <h3 className="text-sm font-medium text-gray-500 mb-2">Tech Stack</h3>
-            <p className="text-gray-900">
-              {typeof project.techStack === 'string'
-                ? project.techStack
-                : project.techStack && typeof project.techStack === 'object'
-                  ? Object.entries(project.techStack)
-                      .filter(([_, value]) => Array.isArray(value) && value.length > 0)
-                      .map(([key, value]) => `${key}: ${value.join(', ')}`)
-                      .join(' | ')
-                  : 'No tech stack specified.'
-              }
-            </p>
-          </div>
+
+            
+          {/* Tags */}
+          {project.tags && project.tags.length > 0 && (
+            <div className='mb-8'>
+              <h3 className="text-sm font-medium text-gray-500 mb-2">Tags</h3>
+              <div className="flex flex-wrap gap-2">
+                {project.tags.map((tag, index) => (
+                  <span 
+                    key={index}
+                    className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800"
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+      
           
           {/* Dates & Progress */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
@@ -232,30 +238,8 @@ export default async function ProjectPage({ params }) {
               </div>
             )}
           </div>
-          
-          {/* Tags */}
-          {project.tags && project.tags.length > 0 && (
-            <div>
-              <h3 className="text-sm font-medium text-gray-500 mb-2">Tags</h3>
-              <div className="flex flex-wrap gap-2">
-                {project.tags.map((tag, index) => (
-                  <span 
-                    key={index}
-                    className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800"
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            </div>
-          )}
+        
         </div>
-      </div>
-      
-      {/* Created & Updated Information */}
-      <div className="text-sm text-gray-500 text-center">
-        <p>Created: {new Date(project.createdAt).toLocaleString()}</p>
-        <p>Last Updated: {new Date(project.updatedAt).toLocaleString()}</p>
       </div>
     </div>
   );

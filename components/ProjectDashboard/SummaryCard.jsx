@@ -1,15 +1,16 @@
+import Link from "next/link";
+
 export default function SummaryCards({
   totalProjects,
   completedProjects,
-  totalBudget,
-  totalSpent,
   avgCompletion,
   taskCompletionPercentage,
   totalTasks,
-  completedTasks
+  completedTasks,
+  services,
 }) {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
       {/* Total Projects Card */}
       <div className="bg-white rounded-lg shadow-md p-6">
         <div className="flex justify-between items-center">
@@ -54,8 +55,26 @@ export default function SummaryCards({
         </div>
       </div>
       
-      {/* Total Tasks Card */}
+      {/* Services Offered */}
       <div className="bg-white rounded-lg shadow-md p-6">
+        <div className="flex justify-between items-center">
+          <h3 className="text-gray-500 text-sm font-medium">Total Services</h3>
+          <span className="bg-green_bg text-red-100 text-xs font-medium rounded-[5px] px-2.5 py-1">Tags</span>
+        </div>
+        <p className="text-3xl font-bold text-gray-800 mt-2">
+          {services.length}
+        </p>
+        <div className="flex items-center mt-4 text-sm text-gray-500">
+          <Link href="#">
+            <button className="text-green_bg font-medium hover:underline focus:outline-none">
+              View all services
+            </button>
+          </Link>
+        </div>
+      </div>
+
+       {/* Total Tasks Card */}
+       <div className="bg-white rounded-lg shadow-md p-6">
         <div className="flex justify-between items-center">
           <h3 className="text-gray-500 text-sm font-medium">Total Tasks</h3>
           <span className="bg-pink_bg text-red-100 text-xs font-medium rounded-[5px] px-2.5 py-1">Tasks</span>
@@ -64,7 +83,7 @@ export default function SummaryCards({
           {completedTasks} / {totalTasks}
         </p>
         <div className="flex items-center mt-4 text-sm text-gray-500">
-          <span className="text-green-500 font-medium">
+          <span className="text-red_bg font-medium">
             {taskCompletionPercentage}% completed
           </span>
         </div>

@@ -19,20 +19,20 @@ try {
         type: String,
         trim: true
       },
-      techStack: {
-        frontend: [{
-          type: String
-        }],
-        backend: [{
-          type: String
-        }],
-        database: [{
-          type: String
-        }],
-        devOps: [{
-          type: String
-        }]
-      },
+      // techStack: {
+      //   frontend: [{
+      //     type: String
+      //   }],
+      //   backend: [{
+      //     type: String
+      //   }],
+      //   database: [{
+      //     type: String
+      //   }],
+      //   devOps: [{
+      //     type: String
+      //   }]
+      // },
       status: {
         type: String,
         required: true,

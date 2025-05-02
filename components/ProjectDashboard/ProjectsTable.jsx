@@ -11,6 +11,26 @@ export default function ProjectsTable({ projects, filteredProjects }) {
   const indexOfLastProject = currentPage * projectsPerPage;
   const indexOfFirstProject = indexOfLastProject - projectsPerPage;
   const currentProjects = filteredProjects.slice(indexOfFirstProject, indexOfLastProject);
+
+  const rawTagColors = [
+    { name: "WordPress", color: "#21759B" },
+    { name: "Next.js", color: "#000000" },
+    { name: "React", color: "#61DAFB" },
+    { name: "Laravel", color: "#FF2D20" },
+    { name: "Static Website", color: "#A0AEC0" },
+    { name: "GoHighLevel", color: "#F6A609" },
+    { name: "E-Commerce", color: "#38B2AC" },
+    { name: "Mobile Development - React Native", color: "#61DAFB" },
+    { name: "PHP", color: "#777BB4" },
+    { name: "JavaScript", color: "#F7DF1E" }
+  ];
+  
+  // Create a normalized map for matching
+  const tagColors = rawTagColors.reduce((acc, tag) => {
+    acc[tag.name.toLowerCase()] = tag.color;
+    return acc;
+  }, {});
+  
   
   // Calculate total pages
   const totalPages = Math.ceil(filteredProjects.length / projectsPerPage);
@@ -65,16 +85,25 @@ export default function ProjectsTable({ projects, filteredProjects }) {
                   <div className="flex items-center">
                     <div>
                       <div className="text-sm font-medium text-gray-900">{project.name}</div>
-                      <div className="text-sm text-gray-500">{project.description}</div>
-                      {project.tags && (
-                        <div className="flex flex-wrap gap-1 mt-1">
-                          {project.tags.map((tag, index) => (
-                            <span key={index} className="bg-gray-100 px-2 py-0.5 rounded-[5px] text-xs text-gray-800">
+                      <div className="flex flex-wrap gap-2 mt-1">
+                        {project.tags.map((tag, index) => {
+                          const tagKey = tag.toLowerCase().trim();
+                          const bgColor = tagColors[tagKey] || "#E2E8F0";
+                          const isDarkBg = ["#000000", "#21759B", "#777BB4"].includes(bgColor);
+                          const textColor = isDarkBg ? "#FFFFFF" : "#000000";
+
+                          return (
+                            <span
+                              key={index}
+                              style={{ backgroundColor: bgColor, color: textColor }}
+                              className="px-2 py-0.5 rounded-[5px] text-xs font-medium"
+                            >
                               {tag}
                             </span>
-                          ))}
-                        </div>
-                      )}
+                          );
+                        })}
+                      </div>
+
                     </div>
                   </div>
                 </td>

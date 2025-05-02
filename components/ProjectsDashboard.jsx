@@ -285,7 +285,7 @@ export const ProjectDashboard = ({ initialProjects }) => {
                 <input
                   id="search"
                   name="search"
-                  className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  className="block w-full pl-10 pr-3 py-2 border text-header border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                   placeholder="Search projects"
                   type="search"
                   value={searchTerm}
@@ -422,7 +422,7 @@ export const ProjectDashboard = ({ initialProjects }) => {
                 )) : (
                   <tr>
                     <td colSpan="7" className="px-6 py-4 text-center text-sm text-gray-500">
-                      No projects found matching your criteria
+                      No projects found matching your search criteria
                     </td>
                   </tr>
                 )}

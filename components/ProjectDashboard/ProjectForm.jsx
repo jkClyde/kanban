@@ -3,10 +3,14 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import addProject from '@/app/actions/addProject';
 
-export default function ProjectForm({ onClose }) {
+export default function ProjectForm({ onClose, services = [] }) {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
+  const [selectedServices, setSelectedServices] = useState([]);
+  
+  // Ensure services is always an array
+  const availableServices = Array.isArray(services) ? services : [];
   
   // Handle form submission
   async function handleSubmit(formData) {
@@ -14,16 +18,20 @@ export default function ProjectForm({ onClose }) {
     setError('');
     
     try {
-      // Process tags - convert comma-separated string to array
-      const tagsInput = formData.get('tags');
-      if (tagsInput) {
-        // Remove the original single tags value
-        formData.delete('tags');
-        
-        // Add each tag individually to support getAll('tags')
-        const tagsArray = tagsInput.split(',').map(tag => tag.trim()).filter(tag => tag);
-        tagsArray.forEach(tag => {
-          formData.append('tags', tag);
+      // Process selected services as tags
+      // First, remove any existing tags entries that might be present
+      formData.delete('tags');
+      
+      // Add each selected service as a tag
+      if (selectedServices.length > 0) {
+        // Find the service names for the selected IDs
+        const selectedServiceNames = availableServices
+          .filter(service => selectedServices.includes(service.id || service.name))
+          .map(service => service.name);
+          
+        // Add each service name as a tag
+        selectedServiceNames.forEach(name => {
+          formData.append('tags', name);
         });
       }
       
@@ -46,6 +54,15 @@ export default function ProjectForm({ onClose }) {
       setIsSubmitting(false);
     }
   }
+
+  // Toggle service selection
+  const toggleService = (serviceId) => {
+    setSelectedServices(prevSelected => 
+      prevSelected.includes(serviceId)
+        ? prevSelected.filter(id => id !== serviceId)
+        : [...prevSelected, serviceId]
+    );
+  };
   
   return (
     <>
@@ -93,9 +110,8 @@ export default function ProjectForm({ onClose }) {
               <select
                 id="status"
                 name="status"
-                className=" text-header mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-purple_bg focus:border-purple_bg"
+                className="text-header mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-purple_bg focus:border-purple_bg"
                 required
-
               >
                 <option value="Planning">Planning</option>
                 <option value="In Progress">In Progress</option>
@@ -114,7 +130,6 @@ export default function ProjectForm({ onClose }) {
                 name="priority"
                 className="text-header mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-purple_bg focus:border-purple_bg"
                 required
-
               >
                 <option value="Low">Low</option>
                 <option value="Medium">Medium</option>
@@ -124,17 +139,41 @@ export default function ProjectForm({ onClose }) {
             </div>
           </div>
           
-          {/* Tech Stack */}
+          {/* Services Multi-Select for Tags */}
           <div>
-            <label htmlFor="techStack" className="block text-sm font-medium text-gray-700">
-              Tech Stack
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Tags
             </label>
-            <input
-              type="text"
-              name="techStack"
-              placeholder="React, Node.js, MongoDB, etc."
-              className="text-header mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-purple_bg focus:border-purple_bg"
-            />
+            <div className="flex flex-wrap gap-2 p-2 border border-gray-300 rounded-md min-h-12 bg-white">
+              {availableServices.length > 0 ? (
+                availableServices.map((service) => (
+                  <div 
+                    key={service.id || service.name} // Fallback to name if id is not available
+                    onClick={() => toggleService(service.id || service.name)}
+                    className={`flex items-center cursor-pointer rounded-full px-3 py-1 text-sm transition-all ${
+                      selectedServices.includes(service.id || service.name)
+                        ? `bg-opacity-100 text-white`
+                        : `bg-opacity-20 text-gray-700`
+                    }`}
+                    style={{ 
+                      backgroundColor: selectedServices.includes(service.id || service.name) 
+                        ? service.color 
+                        : `${service.color}33` // Adding transparency
+                    }}
+                  >
+                    {service.name}
+                    {selectedServices.includes(service.id || service.name) && (
+                      <span className="ml-1 font-bold">✓</span>
+                    )}
+                  </div>
+                ))
+              ) : (
+                <p className="text-gray-500 text-sm">No services available</p>
+              )}
+              
+              {/* We don't need hidden inputs since we're handling the form data in handleSubmit */}
+            </div>
+            <p className="text-xs text-gray-500 mt-1">Click to select/deselect tags</p>
           </div>
           
           {/* Links */}
@@ -188,34 +227,6 @@ export default function ProjectForm({ onClose }) {
               />
             </div>
           </div>
-          
-          {/* Tags */}
-          <div>
-            <label htmlFor="tags" className="block text-sm font-medium text-gray-700">
-              Tags
-            </label>
-            <input
-              type="text"
-              name="tags"
-              placeholder="portfolio, client, personal (comma separated)"
-              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-purple_bg focus:border-purple_bg"
-            />
-          </div>
-          
-          {/* Completion percentage */}
-          {/* <div>
-            <label htmlFor="completion" className="block text-sm font-medium text-gray-700">
-              Completion (%)
-            </label>
-            <input
-              type="number"
-              name="completion"
-              min="0"
-              max="100"
-              defaultValue="0"
-              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-purple_bg focus:border-purple_bg"
-            />
-          </div> */}
         </div>
         
         <div className="mt-6 flex justify-end gap-3">

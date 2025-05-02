@@ -11,7 +11,7 @@ import ProjectsTable from './ProjectsTable';
 import ProjectCards from './ProjectCards';
 
 
-export const ProjectDashboard = ({ initialProjects }) => {
+export const ProjectDashboard = ({ initialProjects , services}) => {
   const [projects, setProjects] = useState(initialProjects || []);
   const [filterStatus, setFilterStatus] = useState('All');
   const [searchTerm, setSearchTerm] = useState('');
@@ -68,6 +68,7 @@ export const ProjectDashboard = ({ initialProjects }) => {
           taskCompletionPercentage={taskCompletionPercentage}
           totalTasks={totalTasks}
           completedTasks={completedTasks}
+          services={services}
         />
 
         <DashboardFilters 
@@ -76,6 +77,7 @@ export const ProjectDashboard = ({ initialProjects }) => {
           searchTerm={searchTerm}
           setSearchTerm={setSearchTerm}
           statusCounts={statusCounts}
+          services={services}
         />
         
         <ProjectsTable 
@@ -90,9 +92,11 @@ export const ProjectDashboard = ({ initialProjects }) => {
         
        
         
-        <h2 className="text-xl font-bold text-gray-800 mb-4">Project Cards</h2>
+        <h2 className="text-xl font-bold text-gray-800 mb-4">Latest Projects</h2>
         <ProjectCards filteredProjects={filteredProjects} />
       </main>
+
+   
     </div>
   );
 };
