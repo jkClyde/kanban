@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Header from './Header';
 import SummaryCards from './SummaryCard';
 import StatusChart from './StatusChart';
@@ -10,11 +10,17 @@ import DashboardFilters from './DashboardFilters';
 import ProjectsTable from './ProjectsTable';
 import ProjectCards from './ProjectCards';
 
-
-export const ProjectDashboard = ({ initialProjects , services}) => {
+export const ProjectDashboard = ({ initialProjects, services }) => {
   const [projects, setProjects] = useState(initialProjects || []);
   const [filterStatus, setFilterStatus] = useState('All');
   const [searchTerm, setSearchTerm] = useState('');
+  
+  // This effect will update the state when initialProjects changes
+  useEffect(() => {
+    if (initialProjects) {
+      setProjects(initialProjects);
+    }
+  }, [initialProjects]); // This dependency array ensures the effect runs when initialProjects changes
   
   // Calculate summary metrics
   const totalProjects = projects.length;
@@ -51,14 +57,14 @@ export const ProjectDashboard = ({ initialProjects , services}) => {
 
   return (
     <div className="bg-gray-100 min-h-screen w-full py-10">
-    <header className=" text-header">
-      <div className="container mx-auto px-4 pb-[15px]">
-        <h1 className="text-3xl font-bold">Project Management Dashboard</h1>
-        <p className="mt-1 text-text">Track and manage your projects efficiently</p>
-      </div>
-    </header>
+      <header className="text-header">
+        <div className="container mx-auto px-4 pb-4">
+          <h1 className="text-3xl font-bold">Project Management Dashboard</h1>
+          <p className="mt-1 text-text">Track and manage your projects efficiently</p>
+        </div>
+      </header>
       
-      <main className="container mx-auto px-4 py-[15px]">
+      <main className="container mx-auto px-4 py-4">
         <SummaryCards 
           totalProjects={totalProjects}
           completedProjects={completedProjects}
@@ -90,13 +96,9 @@ export const ProjectDashboard = ({ initialProjects , services}) => {
           <ProgressChart projects={projects} />
         </div>
         
-       
-        
         <h2 className="text-xl font-bold text-gray-800 mb-4">Latest Projects</h2>
         <ProjectCards filteredProjects={filteredProjects} />
       </main>
-
-   
     </div>
   );
 };
