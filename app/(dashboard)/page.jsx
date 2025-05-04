@@ -3,6 +3,10 @@ import Service from "@/models/Services";
 import connectDB from "@/config/database";
 import { ProjectDashboard } from "@/components/ProjectDashboard/ProjectDashboard";
 
+// This disables caching for this route
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 const page = async () => {
   await connectDB();
   
@@ -10,11 +14,13 @@ const page = async () => {
   const projects = await Project.find({}).lean();
   const services = await Service.find({}).lean();
   
+  // Add a timestamp to help with debugging
+  console.log(`Fetched ${projects.length} projects at ${new Date().toISOString()}`);
+  
   // Stringify and parse to ensure plain objects
   const sanitizedProjects = JSON.parse(JSON.stringify(projects));
 
-  return <ProjectDashboard initialProjects={sanitizedProjects}  services={services}/>;
+  return <ProjectDashboard initialProjects={sanitizedProjects} services={services}/>;
 }
 
 export default page;
-
