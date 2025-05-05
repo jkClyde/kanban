@@ -1,26 +1,52 @@
 'use client'
 
-import { FaEye, FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { FaEye, FaChevronLeft, FaChevronRight, FaFilter } from "react-icons/fa";
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 
-export default function TasksTable({ tasks }) {
+export default function TasksTable({ tasks, projects }) {
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
   const [tasksPerPage] = useState(10);
 
+  // Filter states
+  const [filters, setFilters] = useState({
+    project: '',
+    status: '',
+    priority: '',
+    assignedTo: ''
+  });
+  
+  // Filter options
+  const [showFilters, setShowFilters] = useState(false);
+  
+  // Get unique values for filter dropdowns
+  const statusOptions = [...new Set(tasks.map(task => task.status))];
+  const priorityOptions = [...new Set(tasks.map(task => task.priority))];
+  const assigneeOptions = [...new Set(tasks.filter(task => task.assignedTo).map(task => task.assignedTo))];
+
+  // Filter tasks based on selected filters
+  const filteredTasks = tasks.filter(task => {
+    return (
+      (filters.project === '' || task.projectId === filters.project) &&
+      (filters.status === '' || task.status === filters.status) &&
+      (filters.priority === '' || task.priority === filters.priority) &&
+      (filters.assignedTo === '' || task.assignedTo === filters.assignedTo)
+    );
+  });
+
   // Get current tasks
   const indexOfLastTask = currentPage * tasksPerPage;
   const indexOfFirstTask = indexOfLastTask - tasksPerPage;
-  const currentTasks = tasks.slice(indexOfFirstTask, indexOfLastTask);
+  const currentTasks = filteredTasks.slice(indexOfFirstTask, indexOfLastTask);
 
   // Calculate total pages
-  const totalPages = Math.ceil(tasks.length / tasksPerPage);
+  const totalPages = Math.ceil(filteredTasks.length / tasksPerPage);
 
-  // Reset to first page when tasks changes
+  // Reset to first page when filters or tasks change
   useEffect(() => {
     setCurrentPage(1);
-  }, [tasks]);
+  }, [filters, tasks]);
   
   // Reference for table container
   const tableRef = useRef(null);
@@ -41,19 +67,161 @@ export default function TasksTable({ tasks }) {
     }
   };
 
+  // Handle filter change
+  const handleFilterChange = (filterName, value) => {
+    setFilters({
+      ...filters,
+      [filterName]: value
+    });
+  };
+
+  // Reset all filters
+  const resetFilters = () => {
+    setFilters({
+      project: '',
+      status: '',
+      priority: '',
+      assignedTo: ''
+    });
+  };
+
+  // Toggle filters visibility
+  const toggleFilters = () => {
+    setShowFilters(!showFilters);
+  };
+
   // Check if any tasks have a dueDate
   const showDueDate = tasks.some(task => task.dueDate);
   // Check if any tasks have assignedTo
   const showAssignedTo = tasks.some(task => task.assignedTo);
 
+  // Function to get project name by projectId
+  const getProjectName = (projectId) => {
+    const project = projects.find(p => p._id === projectId);
+    return project ? project.name : 'Unknown Project';
+  };
+
   return (
-    <div ref={tableRef} className="bg-white shadow-md rounded-lg overflow-hidden mb-8">
-      <div className="overflow-x-auto">
+    <div className="bg-white shadow-md rounded-lg overflow-hidden mb-8">
+      {/* Filter Toggle Button */}
+      <div className="p-4 border-b border-gray-200 flex justify-between items-center">
+        <h2 className="text-lg font-semibold text-gray-800">Tasks</h2>
+        <button 
+          onClick={toggleFilters}
+          className="flex items-center px-3 py-2 bg-purple_bg text-white rounded-md hover:bg-indigo-700 transition-colors"
+        >
+          <FaFilter className="mr-2" />
+          {showFilters ? 'Hide Filters' : 'Show Filters'}
+        </button>
+      </div>
+
+      {/* Filter Section */}
+      {showFilters && (
+        <div className="p-4 bg-gray-50 border-b border-gray-200">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            {/* Project Filter */}
+            <div>
+              <label htmlFor="project-filter" className="block text-sm font-medium text-gray-700 mb-1">
+                Project
+              </label>
+              <select
+                id="project-filter"
+                value={filters.project}
+                onChange={(e) => handleFilterChange('project', e.target.value)}
+                className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              >
+                <option value="">All Projects</option>
+                {projects.map((project) => (
+                  <option key={project._id} value={project._id}>
+                    {project.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Status Filter */}
+            <div>
+              <label htmlFor="status-filter" className="block text-sm font-medium text-gray-700 mb-1">
+                Status
+              </label>
+              <select
+                id="status-filter"
+                value={filters.status}
+                onChange={(e) => handleFilterChange('status', e.target.value)}
+                className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              >
+                <option value="">All Statuses</option>
+                {statusOptions.map((status) => (
+                  <option key={status} value={status}>
+                    {status}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Priority Filter */}
+            <div>
+              <label htmlFor="priority-filter" className="block text-sm font-medium text-gray-700 mb-1">
+                Priority
+              </label>
+              <select
+                id="priority-filter"
+                value={filters.priority}
+                onChange={(e) => handleFilterChange('priority', e.target.value)}
+                className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              >
+                <option value="">All Priorities</option>
+                {priorityOptions.map((priority) => (
+                  <option key={priority} value={priority}>
+                    {priority}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Assignee Filter */}
+            {showAssignedTo && (
+              <div>
+                <label htmlFor="assignee-filter" className="block text-sm font-medium text-gray-700 mb-1">
+                  Assignee
+                </label>
+                <select
+                  id="assignee-filter"
+                  value={filters.assignedTo}
+                  onChange={(e) => handleFilterChange('assignedTo', e.target.value)}
+                  className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                >
+                  <option value="">All Assignees</option>
+                  <option value="Unassigned">Unassigned</option>
+                  {assigneeOptions.map((assignee) => (
+                    <option key={assignee} value={assignee}>
+                      {assignee}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
+          </div>
+
+          {/* Reset Filters Button */}
+          <div className="mt-4 flex justify-end">
+            <button
+              onClick={resetFilters}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition-colors"
+            >
+              Reset Filters
+            </button>
+          </div>
+        </div>
+      )}
+
+      <div ref={tableRef} className="overflow-x-auto">
         <table className="min-w-full divide-y divide-gray-200">
           {/* Table Header */}
           <thead className="bg-sidebar text-white">
             <tr>
               <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Title</th>
+              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Project</th>
               <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Status</th>
               <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Priority</th>
               {showDueDate && (
@@ -76,13 +244,21 @@ export default function TasksTable({ tasks }) {
                     <div className="text-md font-medium text-gray-900">{task.title}</div>
                   </div>
                 </td>
+                
+                {/* Project */}
+                <td className="px-6 py-4 whitespace-nowrap">
+                    <Link className="flex items-center" href={`/projects/${task.projectId}`}>   
+                      <div className="text-sm text-gray-900">{getProjectName(task.projectId)}</div>
+                    </Link>
+                </td>
+
                 {/* Status */}
                 <td className="px-6 py-4 whitespace-nowrap">
                   <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-[5px] ${
                     task.status === 'Completed' ? 'bg-green_bg text-green-100' : 
                     task.status === 'In Progress' ? 'bg-yellow_bg text-yellow-100' :
-                    task.status === 'Planning' ? 'bg-blue_bg text-blue-100' :
-                    task.status === 'On Hold' ? 'bg-purple_bg text-purple-100' :
+                    task.status === 'To Do' ? 'bg-blue_bg text-blue-100' :
+                    task.status === 'In Review' ? 'bg-purple_bg text-purple-100' :
                     'bg-red-100 text-red-800'
                   }`}>
                     {task.status}
@@ -95,7 +271,7 @@ export default function TasksTable({ tasks }) {
                     task.priority === 'High' ? 'bg-red_bg text-red-100' : 
                     task.priority === 'Medium' ? 'bg-yellow_bg text-yellow-100' :
                     task.priority === 'Low' ? 'bg-blue_bg text-blue-100' :
-                    task.priority === 'Normal' ? 'bg-purple_bg text-purple-100' :
+                    task.priority === 'Urgent' ? 'bg-red_bg text-red-100' :
                     'bg-green-100 text-green-800'
                   }`}>
                     {task.priority}
@@ -125,7 +301,7 @@ export default function TasksTable({ tasks }) {
               </tr>
             )) : (
               <tr>
-                <td colSpan="6" className="px-6 py-4 text-center text-sm text-gray-500">
+                <td colSpan="7" className="px-6 py-4 text-center text-sm text-gray-500">
                   No Tasks Found
                 </td>
               </tr>
@@ -135,7 +311,7 @@ export default function TasksTable({ tasks }) {
       </div>
 
       {/* Pagination Controls */}
-      {tasks.length > tasksPerPage && (
+      {filteredTasks.length > tasksPerPage && (
         <div className="px-6 py-3 flex items-center justify-between border-t border-gray-200">
           <div className="flex-1 flex justify-between sm:hidden">
             <button
@@ -162,9 +338,12 @@ export default function TasksTable({ tasks }) {
               <p className="text-sm text-gray-700">
                 Showing <span className="font-medium">{indexOfFirstTask + 1}</span> to{" "}
                 <span className="font-medium">
-                  {indexOfLastTask > tasks.length ? tasks.length : indexOfLastTask}
+                  {indexOfLastTask > filteredTasks.length ? filteredTasks.length : indexOfLastTask}
                 </span>{" "}
-                of <span className="font-medium">{tasks.length}</span> tasks
+                of <span className="font-medium">{filteredTasks.length}</span> tasks
+                {filteredTasks.length !== tasks.length && (
+                  <span className="ml-1">(filtered from {tasks.length} total)</span>
+                )}
               </p>
             </div>
             <div>

@@ -3,6 +3,7 @@
 
 import connectDB from "@/config/database"
 import Task from "@/models/Tasks"
+import Project from "@/models/Project"
 import TasksTable from "@/components/Tasks/TasksTable"
 
 export const metadata = {
@@ -18,10 +19,11 @@ async function getTasks() {
 export default async function ProjectsPage() {
   // Fetch data on the server
   const tasks = await getTasks()
+  const projects = await Project.find({}).lean()
   
   return (
     <div className="w-full h-full mx-auto px-4 md:px-8 py-8 bg-white">
-      <TasksTable tasks={tasks} />
+      <TasksTable tasks={tasks} projects={projects} />
     </div>
   )
 }

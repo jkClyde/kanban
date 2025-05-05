@@ -1,20 +1,19 @@
 // app/projects/[id]/page.js
 import connectDB from '@/config/database';
 import Project from '@/models/Project';
+import Tasks from '@/models/Tasks';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { formatDistanceToNow } from 'date-fns';
 import ProjectActions from './ProjectAction';
+import TasksTable from '@/components/Tasks/TasksTable';
 
 // Function to get a single project by ID
 async function getProject(id) {
   await connectDB();
-  
   try {
     const project = await Project.findById(id);
-    
     if (!project) return null;
-    
     // Convert Mongoose document to a plain JavaScript object
     return JSON.parse(JSON.stringify(project));
   } catch (error) {
@@ -23,12 +22,29 @@ async function getProject(id) {
   }
 }
 
+// Function to get tasks for a specific project
+async function getTasks() {
+  await connectDB();
+  
+  try {
+    const tasks = await Tasks.find({}).lean();   
+    return JSON.parse(JSON.stringify(tasks)); 
+  } catch (error) {
+    console.error('Error fetching tasks:', error);
+    return [];
+  }
+}
+
+
 export default async function ProjectPage({ params }) {
   const project = await getProject(params.id);
   
   if (!project) {
     notFound();
   }
+  
+  // Pass the project ID to getTasks function
+  const tasks = await getTasks(params.id);
 
   // Calculate the completion date if available
   const startDateFormatted = project.startDate 
@@ -93,8 +109,6 @@ export default async function ProjectPage({ params }) {
     <div className="w-full h-full mx-auto px-8 py-8 bg-white">
       {/* Back button */}
       <div className='flex flex-col gap-[15px] mb-6'>
-
-
         <Link 
           href="/" 
           className="inline-flex items-center text-sm text-purple_bg hover:text-indigo-700 "
@@ -117,9 +131,6 @@ export default async function ProjectPage({ params }) {
             <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${priorityColors[project.priority] || 'bg-gray-100 text-gray-800'}`}>
               {project.priority} Priority
             </span>
-            {/* <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
-              {project.completion}% Complete
-            </span> */}
           </div>
         </div>
 
@@ -141,21 +152,21 @@ export default async function ProjectPage({ params }) {
 
           {/* tags */}
           <div className="flex flex-wrap gap-2 mt-1 mb-3">
-            {project.tags.map((tag, index) => {
+            {project.tags && project.tags.length > 0 ? project.tags.map((tag, index) => {
               const tagKey = tag.toLowerCase().trim();
               const bgColor = tagColors[tagKey] || "#E2E8F0";
               const isDarkBg = ["#000000", "#21759B", "#777BB4"].includes(bgColor);
               const textColor = isDarkBg ? "#FFFFFF" : "#000000";
               return (
-                  <span
-                    key={index}
-                    style={{ backgroundColor: bgColor, color: textColor }}
-                    className="px-2 py-0.5 rounded-[5px] text-xs font-medium"
-                  >
-                      {tag}
-                    </span>
-                  );
-                })}
+                <span
+                  key={index}
+                  style={{ backgroundColor: bgColor, color: textColor }}
+                  className="px-2 py-0.5 rounded-[5px] text-xs font-medium"
+                >
+                  {tag}
+                </span>
+              );
+            }) : null}
           </div>
          
             
@@ -168,10 +179,6 @@ export default async function ProjectPage({ params }) {
                   <span className="text-sm text-gray-500">Start Date:</span>
                   <span className="text-sm font-medium text-gray-900">{startDateFormatted}</span>
                 </div>
-                {/* <div className="flex justify-between">
-                  <span className="text-sm text-gray-500">Timeline:</span>
-                  <span className="text-sm font-medium text-gray-900">{timeUntilDeadline}</span>
-                </div> */}
               </div>
             </div>
             
@@ -226,6 +233,36 @@ export default async function ProjectPage({ params }) {
         
         </div>
       </div>
+
+      {/* Tasks Section */}
+        <div className="bg-[#f1f0f0] shadow-lg rounded-lg overflow-hidden mb-8">
+          <div className="px-6 py-3 border-b border-gray-200">
+            <h2 className="text-lg font-semibold text-header">Tasks</h2>
+          </div>
+          
+          <div className="px-6 py-3">
+            {tasks && tasks.filter(task => task.projectId === project._id).length > 0 ? (
+              <ul className="divide-y divide-gray-200">
+                {tasks.filter(task => task.projectId === project._id).map((task) => (
+                  <li key={task._id} className="py-4">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h3 className="text-md font-medium">{task.name}</h3>
+                        <p className="text-sm text-gray-500">{task.description}</p>
+                      </div>
+                      <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${statusColors[task.status] || 'bg-gray-100 text-gray-800'}`}>
+                        {task.status}
+                      </span>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="text-gray-500">No tasks found for this project.</p>
+            )}
+          </div>
+        </div>
+      
     </div>
   );
 }
