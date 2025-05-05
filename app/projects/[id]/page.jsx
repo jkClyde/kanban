@@ -69,6 +69,26 @@ export default async function ProjectPage({ params }) {
     'Critical': 'bg-red_bg text-red-100'
   };
 
+  
+  const rawTagColors = [
+    { name: "WordPress", color: "#21759B" },
+    { name: "Next.js", color: "#000000" },
+    { name: "React", color: "#61DAFB" },
+    { name: "Laravel", color: "#FF2D20" },
+    { name: "Static Website", color: "#A0AEC0" },
+    { name: "GoHighLevel", color: "#F6A609" },
+    { name: "E-Commerce", color: "#38B2AC" },
+    { name: "Mobile Development - React Native", color: "#61DAFB" },
+    { name: "PHP", color: "#777BB4" },
+    { name: "JavaScript", color: "#F7DF1E" }
+  ];
+
+    // Create a normalized map for matching
+    const tagColors = rawTagColors.reduce((acc, tag) => {
+      acc[tag.name.toLowerCase()] = tag.color;
+      return acc;
+    }, {});
+
   return (
     <div className="w-full h-full mx-auto px-8 py-8 bg-white">
       {/* Back button */}
@@ -105,9 +125,9 @@ export default async function ProjectPage({ params }) {
             <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${priorityColors[project.priority] || 'bg-gray-100 text-gray-800'}`}>
               {project.priority} Priority
             </span>
-            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+            {/* <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
               {project.completion}% Complete
-            </span>
+            </span> */}
           </div>
         </div>
 
@@ -147,25 +167,26 @@ export default async function ProjectPage({ params }) {
             <p className="text-gray-900 whitespace-pre-line">{project.description || 'No description provided.'}</p>
           </div>
 
-            
-          {/* Tags */}
-          {project.tags && project.tags.length > 0 && (
-            <div className='mb-8'>
-              <h3 className="text-sm font-medium text-gray-500 mb-2">Tags</h3>
-              <div className="flex flex-wrap gap-2">
-                {project.tags.map((tag, index) => (
-                  <span 
+          {/* tags */}
+          <div className="flex flex-wrap gap-2 mt-1 mb-6">
+            {project.tags.map((tag, index) => {
+              const tagKey = tag.toLowerCase().trim();
+              const bgColor = tagColors[tagKey] || "#E2E8F0";
+              const isDarkBg = ["#000000", "#21759B", "#777BB4"].includes(bgColor);
+              const textColor = isDarkBg ? "#FFFFFF" : "#000000";
+              return (
+                  <span
                     key={index}
-                    className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800"
+                    style={{ backgroundColor: bgColor, color: textColor }}
+                    className="px-2 py-0.5 rounded-[5px] text-xs font-medium"
                   >
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            </div>
-          )}
-      
-          
+                      {tag}
+                    </span>
+                  );
+                })}
+          </div>
+         
+            
           {/* Dates & Progress */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <div>
