@@ -6,7 +6,8 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { formatDistanceToNow } from 'date-fns';
 import ProjectActions from './ProjectAction';
-import TasksTable from '@/components/Tasks/TasksTable';
+import ViewTaskAction from './ViewTaskAction';
+import TasksTable from './Tasks';
 
 // Function to get a single project by ID
 async function getProject(id) {
@@ -235,33 +236,14 @@ export default async function ProjectPage({ params }) {
       </div>
 
       {/* Tasks Section */}
-        <div className="bg-[#f1f0f0] shadow-lg rounded-lg overflow-hidden mb-8">
-          <div className="px-6 py-3 border-b border-gray-200">
-            <h2 className="text-lg font-semibold text-header">Tasks</h2>
-          </div>
-          
-          <div className="px-6 py-3">
-            {tasks && tasks.filter(task => task.projectId === project._id).length > 0 ? (
-              <ul className="divide-y divide-gray-200">
-                {tasks.filter(task => task.projectId === project._id).map((task) => (
-                  <li key={task._id} className="py-4">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <h3 className="text-md font-medium">{task.name}</h3>
-                        <p className="text-sm text-gray-500">{task.description}</p>
-                      </div>
-                      <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${statusColors[task.status] || 'bg-gray-100 text-gray-800'}`}>
-                        {task.status}
-                      </span>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p className="text-gray-500">No tasks found for this project.</p>
-            )}
-          </div>
-        </div>
+
+      <TasksTable 
+        tasks={tasks} 
+        projectId={project._id} 
+        ViewTaskAction={ViewTaskAction} 
+      />      
+
+        
       
     </div>
   );

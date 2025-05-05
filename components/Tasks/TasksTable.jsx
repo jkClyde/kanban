@@ -3,11 +3,16 @@
 import { FaEye, FaChevronLeft, FaChevronRight, FaFilter } from "react-icons/fa";
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
+import TaskModal from "./TaskModal"; // Import the TaskModal component
 
 export default function TasksTable({ tasks, projects }) {
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
   const [tasksPerPage] = useState(10);
+
+  // Modal state
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedTask, setSelectedTask] = useState(null);
 
   // Filter states
   const [filters, setFilters] = useState({
@@ -90,6 +95,17 @@ export default function TasksTable({ tasks, projects }) {
     setShowFilters(!showFilters);
   };
 
+  // Handle opening the task modal
+  const openTaskModal = (task) => {
+    setSelectedTask(task);
+    setIsModalOpen(true);
+  };
+
+  // Handle closing the task modal
+  const closeTaskModal = () => {
+    setIsModalOpen(false);
+  };
+
   // Check if any tasks have a dueDate
   const showDueDate = tasks.some(task => task.dueDate);
   // Check if any tasks have assignedTo
@@ -99,6 +115,11 @@ export default function TasksTable({ tasks, projects }) {
   const getProjectName = (projectId) => {
     const project = projects.find(p => p._id === projectId);
     return project ? project.name : 'Unknown Project';
+  };
+
+  // Function to get project object by projectId
+  const getProject = (projectId) => {
+    return projects.find(p => p._id === projectId);
   };
 
   return (
@@ -294,9 +315,12 @@ export default function TasksTable({ tasks, projects }) {
 
                 {/* Actions */}
                 <td className="px-6 py-4 whitespace-nowrap text-center text-sm font-medium flex justify-center">
-                  <Link href={`/tasks/${task._id}`} className="text-purple_bg hover:text-indigo-900">
+                  <button 
+                    onClick={() => openTaskModal(task)}
+                    className="text-purple_bg hover:text-indigo-900 focus:outline-none"
+                  >
                     <FaEye style={{ fontSize: '24px' }} />
-                  </Link>
+                  </button>
                 </td>
               </tr>
             )) : (
@@ -386,6 +410,14 @@ export default function TasksTable({ tasks, projects }) {
           </div>
         </div>
       )}
+
+      {/* Task Detail Modal */}
+      <TaskModal 
+        task={selectedTask}
+        project={selectedTask ? getProject(selectedTask.projectId) : null}
+        isOpen={isModalOpen}
+        onClose={closeTaskModal}
+      />
     </div>
   );
 }

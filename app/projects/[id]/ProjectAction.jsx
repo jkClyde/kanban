@@ -3,35 +3,32 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import EditProjectModal from '@/components/ProjectDashboard/UpdateProjectForm';
+import deleteProject from '@/app/actions/deleteProject';
 
 export default function ProjectActions({ project }) {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const router = useRouter();
 
   const handleDelete = async () => {
-    if (window.confirm('Are you sure you want to delete this project? This action cannot be undone.')) {
-      setIsDeleting(true);
+    setIsDeleting(true);
+    try {
+      const result = await deleteProject(project._id);
       
-      try {
-        const res = await fetch(`/api/projects/${project._id}`, {
-          method: 'DELETE',
-        });
-        
-        if (res.ok) {
-          router.push('/projects');
-          router.refresh();
-        } else {
-          const data = await res.json();
-          console.error('Failed to delete project:', data.message);
-          alert('Failed to delete project. Please try again.');
-        }
-      } catch (error) {
-        console.error('Error deleting project:', error);
-        alert('An error occurred while deleting the project.');
-      } finally {
-        setIsDeleting(false);
+      if (result.success) {
+        router.push('/projects');
+        router.refresh();
+      } else {
+        console.error('Failed to delete project:', result.error);
+        alert('Failed to delete project. Please try again.');
       }
+    } catch (error) {
+      console.error('Error deleting project:', error);
+      alert('An error occurred while deleting the project.');
+    } finally {
+      setIsDeleting(false);
+      setIsDeleteModalOpen(false);
     }
   };
 
@@ -48,7 +45,7 @@ export default function ProjectActions({ project }) {
           Edit
         </button>
         <button
-          onClick={handleDelete}
+          onClick={() => setIsDeleteModalOpen(true)}
           disabled={isDeleting}
           className="inline-flex items-center px-4 py-2 border border-red-300 text-sm font-medium rounded-md shadow-sm text-red-700 bg-white hover:bg-red-50 focus:outline-none"
         >
@@ -65,6 +62,34 @@ export default function ProjectActions({ project }) {
         isOpen={isEditModalOpen} 
         setIsOpen={setIsEditModalOpen} 
       />
+
+      {/* Delete Confirmation Modal */}
+      {isDeleteModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-lg p-6 max-w-md w-full">
+            <h3 className="text-lg font-medium text-gray-900 mb-4">Delete Project</h3>
+            <p className="text-gray-600 mb-6">
+              Are you sure you want to delete "{project.name}"? This action cannot be undone.
+            </p>
+            <div className="flex justify-end space-x-3">
+              <button
+                onClick={() => setIsDeleteModalOpen(false)}
+                className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+                disabled={isDeleting}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDelete}
+                className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none"
+                disabled={isDeleting}
+              >
+                {isDeleting ? 'Deleting...' : 'Delete'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }
