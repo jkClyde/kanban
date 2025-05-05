@@ -93,15 +93,7 @@ export default async function ProjectPage({ params }) {
     <div className="w-full h-full mx-auto px-8 py-8 bg-white">
       {/* Back button */}
       <div className='flex flex-col gap-[15px] mb-6'>
-      {/* <Link 
-          href="/" 
-          className="inline-flex items-center text-sm text-purple_bg hover:text-indigo-700 "
-        >
-          <svg className="h-4 w-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
-            <path fillRule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clipRule="evenodd" />
-          </svg>
-          Back to Dashboard
-        </Link> */}
+
 
         <Link 
           href="/" 
@@ -132,35 +124,15 @@ export default async function ProjectPage({ params }) {
         </div>
 
         <ProjectActions project={project} />
-        
-        {/* <div className="flex gap-2">
-          <Link
-            href={`/projects/${project._id}/edit`}
-            className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none"
-          >
-            <svg className="mr-2 h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
-              <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
-            </svg>
-            Edit
-          </Link>
-          <button
-            className="inline-flex items-center px-4 py-2 border border-red-300 text-sm font-medium rounded-md shadow-sm text-red-700 bg-white hover:bg-red-50 focus:outline-none"
-          >
-            <svg className="mr-2 h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
-            </svg>
-            Delete
-          </button>
-        </div> */}
       </div>
       
       {/* Project Details */}
       <div className="bg-[#f1f0f0] shadow-lg rounded-lg overflow-hidden mb-8">
-        <div className="px-6 py-5 border-b border-gray-200">
+        <div className="px-6 py-3 border-b border-gray-200">
           <h2 className="text-lg font-semibold text-header">Project Details</h2>
         </div>
         
-        <div className="p-6">
+        <div className="px-6 py-3">
           {/* Description */}
           <div className="mb-6">
             <h3 className="text-sm font-medium text-gray-500 mb-2">Description</h3>
@@ -168,7 +140,7 @@ export default async function ProjectPage({ params }) {
           </div>
 
           {/* tags */}
-          <div className="flex flex-wrap gap-2 mt-1 mb-6">
+          <div className="flex flex-wrap gap-2 mt-1 mb-3">
             {project.tags.map((tag, index) => {
               const tagKey = tag.toLowerCase().trim();
               const bgColor = tagColors[tagKey] || "#E2E8F0";
@@ -196,29 +168,21 @@ export default async function ProjectPage({ params }) {
                   <span className="text-sm text-gray-500">Start Date:</span>
                   <span className="text-sm font-medium text-gray-900">{startDateFormatted}</span>
                 </div>
-                <div className="flex justify-between mb-2">
-                  <span className="text-sm text-gray-500">Target End Date:</span>
-                  <span className="text-sm font-medium text-gray-900">{targetEndDateFormatted}</span>
-                </div>
-                <div className="flex justify-between">
+                {/* <div className="flex justify-between">
                   <span className="text-sm text-gray-500">Timeline:</span>
                   <span className="text-sm font-medium text-gray-900">{timeUntilDeadline}</span>
-                </div>
+                </div> */}
               </div>
             </div>
             
             <div>
-              <h3 className="text-sm font-medium text-gray-500 mb-2">Progress</h3>
+              <h3 className="text-sm font-medium text-gray-500 mb-2 invisible">Progress</h3>
               <div className="bg-gray-50 rounded p-4">
-                <div className="flex justify-between mb-2">
-                  <span className="text-sm text-gray-900 font-medium">{project.completion}% Complete</span>
+               <div className="flex justify-between mb-2">
+                  <span className="text-sm text-gray-500">Target End Date:</span>
+                  <span className="text-sm font-medium text-gray-900">{targetEndDateFormatted}</span>
                 </div>
-                <div className="w-full bg-gray-200 rounded-full h-2.5">
-                  <div 
-                    className="bg-purple_bg h-2.5 rounded-full" 
-                    style={{ width: `${project.completion}%` }}
-                  ></div>
-                </div>
+               
               </div>
             </div>
           </div>

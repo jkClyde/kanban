@@ -10,7 +10,7 @@ export default function SummaryCards({
   services,
 }) {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-7">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-7">
       {/* Total Projects Card */}
       <div className="bg-white rounded-lg shadow-md p-6">
         <div className="flex justify-between items-center">
@@ -42,7 +42,7 @@ export default function SummaryCards({
       </div> */}
       
       {/* Average Completion Card */}
-      <div className="bg-white rounded-lg shadow-md p-6">
+      {/* <div className="bg-white rounded-lg shadow-md p-6">
         <div className="flex justify-between items-center">
           <h3 className="text-gray-500 text-sm font-medium">Average Completion</h3>
           <span className="bg-purple_bg text-purple-100 text-xs font-medium rounded-[5px] px-2.5 py-1">Progress</span>
@@ -53,7 +53,7 @@ export default function SummaryCards({
             <div className="bg-purple_bg h-2 rounded-[5px]" style={{ width: `${avgCompletion}%` }}></div>
           </div>
         </div>
-      </div>
+      </div> */}
       
       {/* Services Offered */}
       <div className="bg-white rounded-lg shadow-md p-6">
