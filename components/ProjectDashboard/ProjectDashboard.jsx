@@ -59,14 +59,14 @@ export const ProjectDashboard = ({ initialProjects, services, currentProject }) 
   return (
     <div className="bg-gray-100 min-h-screen w-full py-10">
       <header className="text-header">
-        <div className="container mx-auto px-4 pb-4">
+        <div className="container mx-auto px-4 ">
           <h1 className="text-3xl font-bold">Project Management Dashboard</h1>
           <p className="mt-1 text-text">Track and manage your projects efficiently</p>
 
         </div>
       </header>
       
-      <main className="container mx-auto px-4 py-4">
+      <main className="container mx-auto px-4 py-2">
       <CurrentProject CurrentProject={currentProject[0]} allProjects={initialProjects}/>
 
         <SummaryCards 

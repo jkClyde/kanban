@@ -1,15 +1,17 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ChevronDownIcon } from 'lucide-react';
 import { updateCurrent } from '@/app/actions/updateCurrent';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 const CurrentProject = ({ CurrentProject, allProjects }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selected, setSelected] = useState(CurrentProject);
   const [isUpdating, setIsUpdating] = useState(false);
   const [error, setError] = useState(null);
+  const router = useRouter();
 
   const toggleDropdown = () => setIsOpen(!isOpen);
   
@@ -17,35 +19,37 @@ const CurrentProject = ({ CurrentProject, allProjects }) => {
     setIsUpdating(true);
     setError(null);
     
-    try {
-      console.log('Selecting project:', project);
+    try {      
+      // Extract the project ID first
+      const projectId = getProjectId(project);
+      
+      if (!projectId) {
+        throw new Error('Invalid project ID');
+      }
       
       // Create form data
       const formData = new FormData();
       formData.append('name', project.name);
-      
-      // Handle various ID formats - ensure it's a string
-      const projectId = project.project_id || 
-        (project._id ? (typeof project._id === 'string' ? project._id : project._id.toString()) : '') || 
-        (project.id ? (typeof project.id === 'string' ? project.id : project.id.toString()) : '');
-      
       formData.append('project_id', projectId);
       
-      console.log('Submitting form data:', {
-        name: formData.get('name'),
-        project_id: formData.get('project_id')
-      });
-      
       const result = await updateCurrent(formData);
-      console.log('Server action result:', result);
       
       if (!result.success) {
         throw new Error(result.error || 'Failed to update current project');
       }
 
+      // Ensure project has the correct ID property before updating selected state
+      const updatedProject = {
+        ...project,
+        project_id: projectId // Ensure project_id is correctly set
+      };
+            
       // Update local state
-      setSelected(project);
+      setSelected(updatedProject);
       setIsOpen(false);
+      
+      // Force router refresh to update the page with new project data
+      router.refresh();
     } catch (error) {
       console.error('Error updating current project:', error);
       setError(error.message);
@@ -54,17 +58,32 @@ const CurrentProject = ({ CurrentProject, allProjects }) => {
     }
   };
 
+  const getProjectId = (project) => {
+    if (!project) return '';
+        
+    const projectId = project.project_id || 
+      (project._id ? (typeof project._id === 'string' ? project._id : project._id.toString()) : '') || 
+      (project.id ? (typeof project.id === 'string' ? project.id : project.id.toString()) : '');
+    
+    return projectId;
+  };
+
+
   return (
-    <div className="flex flex-col md:flex-row justify-between items-center gap-4 bg-gradient-to-r from-indigo-50 to-blue-50 p-5 rounded-xl shadow-sm mb-6">
+    <div className="flex flex-col md:flex-row justify-between items-center gap-4 bg-gradient-to-r from-indigo-100 to-blue-50 p-5 rounded-xl shadow-sm mb-6">
       <div className="flex items-center gap-3">
         <div className="bg-blue_bg w-2 h-14 rounded-full hidden md:block"></div>
          <div className='flex flex-col gap-1'>
             <p className='text-gray-600 text-sm'>Currently Working on</p>
-            <Link href={`/projects/${selected.project_id}`} className="flex items-center gap-2">
-            {selected.name && (
-                <h1 className="text-2xl font-bold text-header">{selected.name}</h1>
+            {getProjectId(selected) ? (
+              <Link href={`/projects/${getProjectId(selected)}`} className="flex items-center gap-2">
+                {selected.name && (
+                  <h1 className="text-2xl font-bold text-header">{selected.name}</h1>
+                )}
+              </Link>
+            ) : (
+              <h1 className="text-2xl font-bold text-header">{selected?.name || 'No project selected'}</h1>
             )}
-            </Link>
          </div>
       </div>
       
@@ -87,14 +106,8 @@ const CurrentProject = ({ CurrentProject, allProjects }) => {
         {isOpen && (
           <div className="absolute right-0 z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-auto">
             {allProjects && allProjects.map((project) => {
-              // Determine the project's identifier for comparison
-              const projectId = project.project_id || 
-                (project._id ? (typeof project._id === 'string' ? project._id : project._id.toString()) : '') || 
-                (project.id ? (typeof project.id === 'string' ? project.id : project.id.toString()) : '');
-              
-              const selectedId = selected.project_id || 
-                (selected._id ? (typeof selected._id === 'string' ? selected._id : selected._id.toString()) : '') || 
-                (selected.id ? (typeof selected.id === 'string' ? selected.id : selected.id.toString()) : '');
+              const projectId = getProjectId(project);
+              const selectedId = getProjectId(selected);
               
               return (
                 <div
