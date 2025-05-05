@@ -9,8 +9,9 @@ import ProgressChart from './ProgressChart';
 import DashboardFilters from './DashboardFilters';
 import ProjectsTable from './ProjectsTable';
 import ProjectCards from './ProjectCards';
+import CurrentProject from './CurrentProject';
 
-export const ProjectDashboard = ({ initialProjects, services }) => {
+export const ProjectDashboard = ({ initialProjects, services, currentProject }) => {
   const [projects, setProjects] = useState(initialProjects || []);
   const [filterStatus, setFilterStatus] = useState('All');
   const [searchTerm, setSearchTerm] = useState('');
@@ -61,10 +62,13 @@ export const ProjectDashboard = ({ initialProjects, services }) => {
         <div className="container mx-auto px-4 pb-4">
           <h1 className="text-3xl font-bold">Project Management Dashboard</h1>
           <p className="mt-1 text-text">Track and manage your projects efficiently</p>
+
         </div>
       </header>
       
       <main className="container mx-auto px-4 py-4">
+      <CurrentProject CurrentProject={currentProject[0]} allProjects={initialProjects}/>
+
         <SummaryCards 
           totalProjects={totalProjects}
           completedProjects={completedProjects}
