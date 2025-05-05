@@ -1,44 +1,51 @@
-'use server'
+'use server';
 import connectDB from "@/config/database";
-import Task from "@/models/Task";
+import Task from "@/models/Tasks";
 import { revalidatePath } from "next/cache";
 
 async function addTask(formData) {
-    try{
+    try {
         await connectDB();
 
-         // Access all values for array fields
-         const tags = formData.getAll('tags');
+        // Access all values for array fields
+        const tags = formData.getAll('tags');
 
-         //Create task data object
-         const taskData = {
+        // Create task data object
+        const taskData = {
             title: formData.get('title'),
             projectId: formData.get('projectId'),
             description: formData.get('description'),
             status: formData.get('status') || 'To Do',
             priority: formData.get('priority') || 'Medium',
-            assignedTo: parseInt(formData.get('assignedTo') || ''),
-            dueDate: formData.get('startDate') ? new Date(formData.get('dueDate')) : null,
+            assignedTo: formData.get('assignedTo') || '',
             tags,
-         };
+        };
 
-         const newTask = new Task(taskData);
-         await newTask.save();
+        // Only add dueDate if it exists
+        const dueDate = formData.get('dueDate');
+        if (dueDate) {
+            taskData.dueDate = new Date(dueDate);
+        }
 
-         revalidatePath('/tasks');  
+        const newTask = new Task(taskData);
+        await newTask.save();
 
-         // Convert MongoDB ObjectId to string before returning
+        // Revalidate both the tasks page and the specific project page
+        revalidatePath('/tasks');
+        revalidatePath(`/projects/${taskData.projectId}`);
+
+        // Convert MongoDB ObjectId to string before returning
         return { 
             success: true, 
             taskId: newTask._id.toString() 
         };
-    }catch (error) {
-        console.error('Error adding project:', error);
+    } catch (error) {
+        console.error('Error adding task:', error);
         return { 
-          success: false, 
-          error: error.message 
+            success: false, 
+            error: error.message 
         };
-      }
+    }
 }
 
 export default addTask;

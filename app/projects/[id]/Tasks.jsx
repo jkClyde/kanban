@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react';
+import TaskForm from '@/components/Tasks/TaskForm';
 
 const statusColors = {
   'todo': 'bg-yellow-100 text-yellow-800',
@@ -11,6 +12,8 @@ const statusColors = {
 
 const TasksTable = ({ tasks, projectId, ViewTaskAction }) => {
   const [statusFilter, setStatusFilter] = useState('all');
+  const [showAddForm, setshowAddForm] = useState(false);
+
 
   const filteredTasks = tasks.filter(task => 
     task.projectId === projectId && 
@@ -19,30 +22,47 @@ const TasksTable = ({ tasks, projectId, ViewTaskAction }) => {
 
   return (
     <div className="bg-[#f1f0f0] shadow-lg rounded-lg overflow-hidden mb-8">
-      <div className="px-6 py-3 border-b border-gray-200 flex items-center justify-between">
-        <h2 className="text-lg font-semibold text-header">Tasks</h2>
+    <div className="px-6 py-3 border-b border-gray-200 flex items-center justify-between">
+      <h2 className="text-lg font-semibold text-header">Tasks</h2>
 
-          {/* Status Filter */}
-            <div className="px-6 py-3  ">
-                <label htmlFor="status-filter" className="mr-2 text-sm font-medium text-gray-700">
-                Filter by Status:
-                </label>
-                <select
-                id="status-filter"
-                className="rounded-md text-gray-700 border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                onChange={(e) => setStatusFilter(e.target.value)}
-                value={statusFilter}
-                >
-                <option value="all">All</option>
-                <option value="To Do">To Do</option>
-                <option value="In Progress">In Progress</option>
-                <option value="In Review">In Progress</option>
+      <div className="flex items-center gap-4">
+        {/* Status Filter */}
+        <div>
+          <label htmlFor="status-filter" className="mr-2 text-sm font-medium text-gray-700">
+            Filter by Status:
+          </label>
+          <select
+            id="status-filter"
+            className="rounded-md text-gray-700 border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+            onChange={(e) => setStatusFilter(e.target.value)}
+            value={statusFilter}
+          >
+            <option value="all">All</option>
+            <option value="To Do">To Do</option>
+            <option value="In Progress">In Progress</option>
+            <option value="In Review">In Progress</option>
+            <option value="Completed">Completed</option>
+            {/* Add other status options as needed */}
+          </select>
+        </div>
 
-                <option value="Completed">Completed</option>
-                {/* Add other status options as needed */}
-                </select>
-            </div>
+        {/* Add Task Button */}
+        <button
+            onClick={() => setshowAddForm(true)}
+            className="inline-flex items-center px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-md shadow-sm hover:bg-green-700 focus:outline-none"
+        >
+          <svg className="h-4 w-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+            <path
+              fillRule="evenodd"
+              d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
+              clipRule="evenodd"
+            />
+          </svg>
+          Add Task
+        </button>
       </div>
+    </div>
+
 
     
 
@@ -96,6 +116,21 @@ const TasksTable = ({ tasks, projectId, ViewTaskAction }) => {
           <p className="text-gray-500">No tasks found for this project.</p>
         )}
       </div>
+
+      {/* Task modal */}
+      {showAddForm && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-xl w-full max-w-2xl">
+            <h2 className="text-xl font-semibold mb-4">Add New Task</h2>
+            <TaskForm 
+              projectId={projectId}
+              // services={services}
+              onClose={() => setshowAddForm(false)}
+            />
+          </div>
+        </div>
+      )}
+
     </div>
   );
 };

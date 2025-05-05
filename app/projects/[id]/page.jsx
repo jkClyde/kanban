@@ -176,7 +176,7 @@ export default async function ProjectPage({ params }) {
             <div>
               <h3 className="text-sm font-medium text-gray-500 mb-2">Timeline</h3>
               <div className="bg-gray-50 rounded p-4">
-                <div className="flex justify-between mb-2">
+                <div className="flex justify-between ">
                   <span className="text-sm text-gray-500">Start Date:</span>
                   <span className="text-sm font-medium text-gray-900">{startDateFormatted}</span>
                 </div>
@@ -186,7 +186,7 @@ export default async function ProjectPage({ params }) {
             <div>
               <h3 className="text-sm font-medium text-gray-500 mb-2 invisible">Progress</h3>
               <div className="bg-gray-50 rounded p-4">
-               <div className="flex justify-between mb-2">
+               <div className="flex justify-between ">
                   <span className="text-sm text-gray-500">Target End Date:</span>
                   <span className="text-sm font-medium text-gray-900">{targetEndDateFormatted}</span>
                 </div>

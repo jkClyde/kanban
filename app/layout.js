@@ -3,6 +3,7 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import AuthProvider from "@/components/AuthProvider";
 import { Sidebar } from "@/components/Sidebar";
+import { ToastProvider } from "@/components/ToastProvider";
 
 
 
@@ -17,12 +18,16 @@ export default function RootLayout({ children }) {
     <AuthProvider>
     <html lang="en">
       <body className={`antialiased`} >
-        <main className="flex flex-row ">
-          <Sidebar/>
-          <div className="w-full flex justify-center items-center">
-          {children}
-          </div>
-        </main>
+          <main className="flex flex-row ">
+          <ToastProvider>
+
+            <Sidebar/>
+            <div className="w-full flex justify-center items-center">
+            {children}
+            </div>
+            </ToastProvider>
+
+          </main>
       </body>
     </html>
     </AuthProvider>
