@@ -74,9 +74,9 @@ export default function DashboardFilters({
 
       {/* Project Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl md:max-w-4xl p-6">
-            <div className="flex justify-between items-center mb-4">
+        <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-start md:items-center justify-center z-50 overflow-y-auto p-4">
+          <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl md:max-w-4xl my-8 md:my-0">
+            <div className="flex justify-between items-center p-4 border-b">
               <h2 className="text-xl font-semibold text-gray-800">Add New Project</h2>
               <button 
                 onClick={closeModal}
@@ -88,7 +88,9 @@ export default function DashboardFilters({
               </button>
             </div>
             
-            <ProjectForm onClose={closeModal} services={services}/>
+            <div className="max-h-[80vh] overflow-y-auto">
+              <ProjectForm onClose={closeModal} services={services}/>
+            </div>
           </div>
         </div>
       )}
