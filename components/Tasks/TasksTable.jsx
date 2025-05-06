@@ -242,14 +242,14 @@ export default function TasksTable({ tasks, projects }) {
           <thead className="bg-sidebar text-white">
             <tr>
               <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Title</th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Project</th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Status</th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Priority</th>
+              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider hidden md:table-cell">Project</th>
+              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider hidden md:table-cell">Status</th>
+              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider hidden md:table-cell">Priority</th>
               {showDueDate && (
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Due Date</th>
+                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider hidden md:table-cell">Due Date</th>
               )}
               {showAssignedTo && (
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Assigned To</th>
+                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider hidden md:table-cell">Assigned To</th>
               )}
               <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-white uppercase tracking-wider">Actions</th>
             </tr>
@@ -262,19 +262,19 @@ export default function TasksTable({ tasks, projects }) {
                 {/* Title */}
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="flex items-center">
-                    <div className="text-md font-medium text-gray-900">{task.title}</div>
+                    <div className="text-sm md:text-md font-medium text-gray-900">{task.title}</div>
                   </div>
                 </td>
                 
                 {/* Project */}
-                <td className="px-6 py-4 whitespace-nowrap">
+                <td className="px-6 py-4 whitespace-nowrap hidden md:table-cell">
                     <Link className="flex items-center" href={`/projects/${task.projectId}`}>   
                       <div className="text-sm text-gray-900">{getProjectName(task.projectId)}</div>
                     </Link>
                 </td>
 
                 {/* Status */}
-                <td className="px-6 py-4 whitespace-nowrap">
+                <td className="px-6 py-4 whitespace-nowrap hidden md:table-cell">
                   <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-[5px] ${
                     task.status === 'Completed' ? 'bg-green_bg text-green-100' : 
                     task.status === 'In Progress' ? 'bg-yellow_bg text-yellow-100' :
@@ -287,7 +287,7 @@ export default function TasksTable({ tasks, projects }) {
                 </td>
                   
                 {/* Priority */}
-                <td className="px-6 py-4 whitespace-nowrap">
+                <td className="px-6 py-4 whitespace-nowrap hidden md:table-cell">
                   <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-[5px] ${
                     task.priority === 'High' ? 'bg-red_bg text-red-100' : 
                     task.priority === 'Medium' ? 'bg-yellow_bg text-yellow-100' :
@@ -301,14 +301,14 @@ export default function TasksTable({ tasks, projects }) {
 
                 {/* Due date */}
                 {showDueDate && (
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 hidden md:table-cell">
                     {task.dueDate ? new Date(task.dueDate).toLocaleDateString() : 'N/A'}
                   </td>
                 )}
 
                 {/* Assigned To */}
                 {showAssignedTo && (
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 hidden md:table-cell">
                     {task.assignedTo || 'Unassigned'}
                   </td>
                 )}
@@ -325,7 +325,7 @@ export default function TasksTable({ tasks, projects }) {
               </tr>
             )) : (
               <tr>
-                <td colSpan="7" className="px-6 py-4 text-center text-sm text-gray-500">
+                <td colSpan={showDueDate && showAssignedTo ? "7" : showDueDate || showAssignedTo ? "6" : "5"} className="px-6 py-4 text-center text-sm text-gray-500">
                   No Tasks Found
                 </td>
               </tr>
