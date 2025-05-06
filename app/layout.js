@@ -22,7 +22,7 @@ export default function RootLayout({ children }) {
           <ToastProvider>
 
             <Sidebar/>
-            <div className="w-full flex justify-center items-center">
+            <div className="w-full flex justify-center items-center bg-sidebar p-6">
             {children}
             </div>
             </ToastProvider>
