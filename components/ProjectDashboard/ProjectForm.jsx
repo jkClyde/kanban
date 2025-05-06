@@ -2,12 +2,15 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import addProject from '@/app/actions/addProject';
+import { useToast } from '../ToastProvider';
 
 export default function ProjectForm({ onClose, services = [] }) {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
   const [selectedServices, setSelectedServices] = useState([]);
+  const { showToast } = useToast(); 
+
   
   // Ensure services is always an array
   const availableServices = Array.isArray(services) ? services : [];
@@ -39,6 +42,10 @@ export default function ProjectForm({ onClose, services = [] }) {
       const result = await addProject(formData);
       
       if (result.success) {
+         // Show toast notification
+         showToast('Project added successfully', 'success');
+
+
         // Close the modal
         onClose();
         

@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import updateProject from '@/app/actions/updateProject';
+import { useToast } from '@/components/ToastProvider'; 
 
 export default function EditProjectModal({ project, isOpen, setIsOpen }) {
   const router = useRouter();
@@ -23,6 +24,8 @@ export default function EditProjectModal({ project, isOpen, setIsOpen }) {
   const [tagInput, setTagInput] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState(null);
+  const { showToast } = useToast(); 
+  
 
  
 
@@ -108,6 +111,7 @@ export default function EditProjectModal({ project, isOpen, setIsOpen }) {
       const result = await updateProject(project._id, formDataObj);
       
       if (result.success) {
+        showToast('Project updated successfully', 'success');
         setIsOpen(false);
         router.refresh(); // Refresh the page data
       } else {
