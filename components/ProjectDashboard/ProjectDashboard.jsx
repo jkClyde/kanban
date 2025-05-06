@@ -60,7 +60,7 @@ export const ProjectDashboard = ({ initialProjects, services, currentProject }) 
     <div className="bg-gray-100 min-h-screen w-full py-6  p-[15px] md:p-8 rounded-xl">
       <header className="text-header">
         <div className=" mx-auto px-0 md:px-4 ">
-          <h1 className="text-3xl font-bold">Project Management Dashboard</h1>
+          {/* <h1 className="text-3xl font-bold">Project Management Dashboard</h1> */}
           <p className="mt-1 text-text">Track and manage your projects efficiently</p>
 
         </div>
