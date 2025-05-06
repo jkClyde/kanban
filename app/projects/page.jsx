@@ -20,7 +20,7 @@ export default async function ProjectsPage() {
   const projects = await getProjects()
   
   return (
-    <div className="w-full h-full mx-auto  bg-gray-100 py-2 md:py-0 p-3 md:p-8 rounded-xl">
+    <div className="w-full h-full mx-auto  bg-gray-100 py-4 md:py-0 p-3 md:p-8 rounded-xl">
       <ProjectsList initialProjects={projects} />
     </div>
   )
