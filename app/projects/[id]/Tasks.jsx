@@ -49,7 +49,7 @@ const TasksTable = ({ tasks, projectId, ViewTaskAction }) => {
         {/* Add Task Button */}
         <button
             onClick={() => setshowAddForm(true)}
-            className="inline-flex items-center px-4 py-2 bg-purple_bg text-white text-sm font-medium rounded-md shadow-sm hover:bg-green-700 focus:outline-none"
+            className="inline-flex items-center px-4 py-2 bg-purple_bg text-white text-sm font-medium rounded-md shadow-sm hover:bg-purple-950 focus:outline-none"
         >
           <svg className="h-4 w-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
             <path

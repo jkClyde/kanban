@@ -149,7 +149,7 @@ export default function TasksTable({ tasks, projects }) {
                 id="project-filter"
                 value={filters.project}
                 onChange={(e) => handleFilterChange('project', e.target.value)}
-                className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-gray-700"
               >
                 <option value="">All Projects</option>
                 {projects.map((project) => (
@@ -169,7 +169,7 @@ export default function TasksTable({ tasks, projects }) {
                 id="status-filter"
                 value={filters.status}
                 onChange={(e) => handleFilterChange('status', e.target.value)}
-                className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-gray-700"
               >
                 <option value="">All Statuses</option>
                 {statusOptions.map((status) => (
@@ -189,7 +189,7 @@ export default function TasksTable({ tasks, projects }) {
                 id="priority-filter"
                 value={filters.priority}
                 onChange={(e) => handleFilterChange('priority', e.target.value)}
-                className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-gray-700"
               >
                 <option value="">All Priorities</option>
                 {priorityOptions.map((priority) => (
@@ -210,7 +210,7 @@ export default function TasksTable({ tasks, projects }) {
                   id="assignee-filter"
                   value={filters.assignedTo}
                   onChange={(e) => handleFilterChange('assignedTo', e.target.value)}
-                  className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-gray-700"
                 >
                   <option value="">All Assignees</option>
                   <option value="Unassigned">Unassigned</option>
