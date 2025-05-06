@@ -7,11 +7,11 @@ export default function ProjectCard({ project, activeTagFilter }) {
   // Status color mapping
   const getStatusColor = (status) => {
     switch (status) {
-      case 'Completed': return 'bg-green-500 text-white'
+      case 'Completed': return 'bg-green_bg text-white'
       case 'In Progress': return 'bg-yellow-500 text-white'
-      case 'Planning': return 'bg-blue-500 text-white'
-      case 'On Hold': return 'bg-purple-500 text-white'
-      case 'Canceled': return 'bg-red-500 text-white'
+      case 'Planning': return 'bg-blue_bg text-white'
+      case 'On Hold': return 'bg-purple_bg text-white'
+      case 'Canceled': return 'bg-red_bg text-white'
       default: return 'bg-gray-500 text-white'
     }
   }
