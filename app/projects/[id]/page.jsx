@@ -107,7 +107,7 @@ export default async function ProjectPage({ params }) {
     }, {});
 
   return (
-    <div className="w-full h-full mx-auto px-4 py-4 md:px-8 md:py-8 bg-white">
+    <div className="w-full h-full mx-auto px-4 py-4 md:px-8 md:py-8 bg-gray-100 rounded-xl ">
       {/* Back button */}
       <div className='flex flex-col gap-[15px] mb-6'>
         <Link 
