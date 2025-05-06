@@ -4,12 +4,15 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import EditProjectModal from '@/components/ProjectDashboard/UpdateProjectForm';
 import deleteProject from '@/app/actions/deleteProject';
+import { useToast } from '@/components/ToastProvider';
 
 export default function ProjectActions({ project }) {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const router = useRouter();
+  const { showToast } = useToast(); 
+
 
   const handleDelete = async () => {
     setIsDeleting(true);
@@ -19,6 +22,8 @@ export default function ProjectActions({ project }) {
       if (result.success) {
         router.push('/projects');
         router.refresh();
+        showToast('Project deleted successfully', 'error');
+
       } else {
         console.error('Failed to delete project:', result.error);
         alert('Failed to delete project. Please try again.');
