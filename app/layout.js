@@ -9,9 +9,9 @@ import MobileMenu from "@/components/MobileMenu";
 
 
 export const metadata = {
-  title: "Kanban Project Manager",
-  keywords: "Rental Property, Real Estate",
-  description: "Find The Perfect Rental Propery",
+  title: "Cly Project Manager",
+  keywords: "Project Management, Management, Tasks, Projects",
+  description: "Track and manage your projects efficiently",
 };
 
 export default function RootLayout({ children }) {
