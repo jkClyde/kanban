@@ -57,7 +57,7 @@ export const ProjectDashboard = ({ initialProjects, services, currentProject }) 
   const taskCompletionPercentage = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
 
   return (
-    <div className="bg-gray-100 min-h-screen w-full p-8 rounded-xl">
+    <div className="bg-gray-100 min-h-screen w-full py-8 md:py-0 p-1 md:p-8 rounded-xl">
       <header className="text-header">
         <div className=" mx-auto px-4 ">
           <h1 className="text-3xl font-bold">Project Management Dashboard</h1>

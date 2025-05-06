@@ -22,7 +22,7 @@ export default async function ProjectsPage() {
   const projects = await Project.find({}).lean()
   
   return (
-    <div className="w-full h-full mx-auto p-8 bg-gray-100 rounded-xl">
+    <div className="w-full h-full mx-auto  bg-gray-100 py-3 md:py-0 p-3 md:p-8 rounded-xl">
       <TasksTable tasks={tasks} projects={projects} />
     </div>
   )

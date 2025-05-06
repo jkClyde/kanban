@@ -48,7 +48,7 @@ export const Sidebar = () => {
   return (
     <motion.nav
       layout
-      className="sticky top-0 h-screen shrink-0 bg-sidebar p-2 flex flex-col justify-between"
+      className="sticky top-0 h-screen shrink-0 bg-sidebar p-2 hidden md:flex flex-col justify-between  " 
       style={{
         width: open ? "236px" : "fit-content",
       }}

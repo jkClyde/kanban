@@ -20,7 +20,6 @@ export default function RootLayout({ children }) {
       <body className={`antialiased`} >
           <main className="flex flex-row ">
           <ToastProvider>
-
             <Sidebar/>
             <div className="w-full flex justify-center items-center bg-sidebar p-6">
             {children}
