@@ -126,7 +126,7 @@ export default function TasksTable({ tasks, projects }) {
     <div className="bg-white shadow-md rounded-lg overflow-hidden mb-8">
       {/* Filter Toggle Button */}
       <div className="p-4 border-b border-gray-200 flex justify-between items-center">
-        <h2 className="text-lg font-semibold text-gray-800">Tasks</h2>
+        {/* <h2 className="text-lg font-semibold text-gray-800">Tasks</h2> */}
         <button 
           onClick={toggleFilters}
           className="flex items-center px-3 py-2 bg-purple_bg text-white rounded-md hover:bg-indigo-700 transition-colors"

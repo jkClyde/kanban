@@ -23,6 +23,7 @@ export default async function ProjectsPage() {
   
   return (
     <div className="w-full h-full mx-auto  bg-gray-100 py-4 md:py-8 p-3 md:p-8 rounded-xl">
+      <h1 className="text-2xl font-bold text-header mb-4">Tasks</h1>
       <TasksTable tasks={tasks} projects={projects} />
     </div>
   )
