@@ -60,7 +60,7 @@ export default function ProjectsTable({ projects, filteredProjects }) {
   };
 
   return (
-    <div ref={tableRef} className="bg-white shadow-md rounded-lg overflow-hidden mb-8">
+    <div ref={tableRef} className="bg-white shadow-md rounded-lg overflow-hidden mb-[15px] md:mb-8">
       <div className="overflow-x-auto">
         <table className="min-w-full divide-y divide-gray-200">
           {/* Table Header */}

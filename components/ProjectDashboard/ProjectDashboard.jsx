@@ -95,7 +95,7 @@ export const ProjectDashboard = ({ initialProjects, services, currentProject }) 
           filteredProjects={filteredProjects}
         />
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-[15px] md:gap-6 mb-8">
           <StatusChart projects={projects} />
           <ProgressChart projects={projects} />
         </div>

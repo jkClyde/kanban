@@ -70,7 +70,7 @@ const CurrentProject = ({ CurrentProject, allProjects }) => {
 
 
   return (
-    <div className="flex flex-col md:flex-row justify-between items-center gap-4 bg-gradient-to-r from-indigo-100 to-blue-50 p-5 rounded-xl shadow-sm mb-6">
+    <div className="flex flex-col md:flex-row justify-between items-center gap-4 bg-gradient-to-r from-indigo-100 to-blue-50 p-5 rounded-xl shadow-sm mb-[15px] md:mb-6">
       <div className="flex items-center gap-3">
         <div className="bg-blue_bg w-2 h-14 rounded-full hidden md:block"></div>
          <div className='flex flex-col gap-1'>
