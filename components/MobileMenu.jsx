@@ -15,7 +15,7 @@ const MobileMenu = () => {
   return (
     <>
       {/* Header with logo and menu button */}
-      <header className="w-full bg-sidebar px-4 py-3 flex md:hidden justify-between items-center">
+      <header className="w-full bg-sidebar px-4 pt-3 pb-[4px] flex md:hidden justify-between items-center">
         <div className="flex items-center">
           {/* Logo */}
           <div className="text-2xl font-bold text-white">
