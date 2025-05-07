@@ -82,7 +82,7 @@ export const Sidebar = () => {
          <Link href="/tasks">
           <Option
               Icon={FaTasks}
-              title="Tasks"
+              title="My Tasks"
               selected={selected}
               setSelected={setSelected}
               open={open}

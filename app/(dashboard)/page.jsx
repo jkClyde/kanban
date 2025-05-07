@@ -1,6 +1,7 @@
 import Project from "@/models/Project";
 import Service from "@/models/Services";
 import Current from "@/models/Current";
+import Task from "@/models/Tasks";
 import connectDB from "@/config/database";
 import { ProjectDashboard } from "@/components/ProjectDashboard/ProjectDashboard";
 
@@ -14,6 +15,7 @@ const page = async () => {
   // Fetch projects and convert to plain objects
   const projects = await Project.find({}).lean();
   const services = await Service.find({}).lean();
+  const tasks = await Task.find({ status: "To Do" }).lean();
   const currentProject = await Current.find({}).lean();
   
   // Add a timestamp to help with debugging
@@ -22,7 +24,7 @@ const page = async () => {
   // Stringify and parse to ensure plain objects
   const sanitizedProjects = JSON.parse(JSON.stringify(projects));
 
-  return <ProjectDashboard initialProjects={sanitizedProjects} services={services} currentProject={currentProject}/>;
+  return <ProjectDashboard initialProjects={sanitizedProjects} services={services} currentProject={currentProject} tasks={tasks}/>;
 }
 
 export default page;

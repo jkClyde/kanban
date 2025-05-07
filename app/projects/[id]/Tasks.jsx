@@ -5,7 +5,7 @@ import TaskForm from '@/components/Tasks/TaskForm';
 
 const statusColors = {
   'To Do': 'bg-blue_bg text-white',
-  'In Progress': 'bg-yellow-bg text-white',
+  'In Progress': 'bg-yellow_bg text-white',
   'In Review': 'bg-purple_bg text-white',
   'Completed': 'bg-green_bg text-white',
   // add other status-color mappings as needed
@@ -21,11 +21,13 @@ const priorityColors = {
 
 const TasksTable = ({ tasks, projectId, ViewTaskAction }) => {
   const [statusFilter, setStatusFilter] = useState('To Do');
+  const [priorityFilter, setPriorityFilter] = useState('all');
   const [showAddForm, setshowAddForm] = useState(false);
 
   const filteredTasks = tasks.filter(task => 
     task.projectId === projectId && 
-    (statusFilter === 'all' || task.status === statusFilter)
+    (statusFilter === 'all' || task.status === statusFilter) &&
+    (priorityFilter === 'all' || task.priority === priorityFilter)
   );
 
   return (
@@ -37,19 +39,38 @@ const TasksTable = ({ tasks, projectId, ViewTaskAction }) => {
           {/* Status Filter */}
           <div>
             <label htmlFor="status-filter" className="mr-2 text-sm font-medium text-gray-700">
-              Filter by Status:
+              Status:
             </label>
             <select
               id="status-filter"
-              className="rounded-md text-gray-700 border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+              className="rounded-md text-gray-700 border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 p-2"
               onChange={(e) => setStatusFilter(e.target.value)}
               value={statusFilter}
             >
-              <option value="all">All</option>
+              <option value="all">All Statuses</option>
               <option value="To Do">To Do</option>
               <option value="In Progress">In Progress</option>
               <option value="In Review">In Review</option>
               <option value="Completed">Completed</option>
+            </select>
+          </div>
+
+          {/* Priority Filter */}
+          <div>
+            <label htmlFor="priority-filter" className="mr-2 text-sm font-medium text-gray-700">
+              Priority:
+            </label>
+            <select
+              id="priority-filter"
+              className="rounded-md text-gray-700 border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 p-2"
+              onChange={(e) => setPriorityFilter(e.target.value)}
+              value={priorityFilter}
+            >
+              <option value="all">All Priorities</option>
+              <option value="Low">Low</option>
+              <option value="Medium">Medium</option>
+              <option value="High">High</option>
+              <option value="Urgent">Urgent</option>
             </select>
           </div>
 
@@ -104,7 +125,7 @@ const TasksTable = ({ tasks, projectId, ViewTaskAction }) => {
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`px-2 py-2 py-1inline-flex text-xs leading-5 font-semibold rounded-[5px] ${priorityColors[task.priority] || 'bg-gray-100 text-gray-800'}`}>
+                    <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-[5px] ${priorityColors[task.priority] || 'bg-gray-100 text-gray-800'}`}>
                       {task.priority}
                     </span>
                   </td>
@@ -119,7 +140,7 @@ const TasksTable = ({ tasks, projectId, ViewTaskAction }) => {
             </tbody>
           </table>
         ) : (
-          <p className="text-gray-500">No tasks found for this project.</p>
+          <p className="text-gray-500">No tasks found matching the selected filters.</p>
         )}
       </div>
 

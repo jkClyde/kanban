@@ -76,16 +76,19 @@ export default function SummaryCards({
        {/* Total Tasks Card */}
        <div className="bg-white rounded-lg shadow-md p-6">
         <div className="flex justify-between items-center">
-          <h3 className="text-gray-500 text-sm font-medium">Total Tasks</h3>
+          <h3 className="text-gray-500 text-sm font-medium">My Ongoing Tasks</h3>
           <span className="bg-pink_bg text-red-100 text-xs font-medium rounded-[5px] px-2.5 py-1">Tasks</span>
         </div>
         <p className="text-3xl font-bold text-gray-800 mt-2">
-          {completedTasks} / {totalTasks}
+          {/* {completedTasks} / {totalTasks} */}
+          {totalTasks}
         </p>
         <div className="flex items-center mt-4 text-sm text-gray-500">
-          <span className="text-red_bg font-medium">
-            {taskCompletionPercentage}% completed
-          </span>
+          <Link href="/tasks">
+            <button className="text-green_bg font-medium hover:underline focus:outline-none">
+              View Your Tasks
+            </button>
+          </Link>
         </div>
       </div>
     </div>

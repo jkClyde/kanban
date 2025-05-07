@@ -11,7 +11,7 @@ import ProjectsTable from './ProjectsTable';
 import ProjectCards from './ProjectCards';
 import CurrentProject from './CurrentProject';
 
-export const ProjectDashboard = ({ initialProjects, services, currentProject }) => {
+export const ProjectDashboard = ({ initialProjects, services, currentProject, tasks }) => {
   const [projects, setProjects] = useState(initialProjects || []);
   const [filterStatus, setFilterStatus] = useState('All');
   const [searchTerm, setSearchTerm] = useState('');
@@ -52,7 +52,7 @@ export const ProjectDashboard = ({ initialProjects, services, currentProject }) 
   });
   
   // Total tasks calculation
-  const totalTasks = projects.reduce((sum, project) => sum + (project.tasks || 0), 0);
+  const totalTasks = tasks.length;
   const completedTasks = projects.reduce((sum, project) => sum + (project.completedTasks || 0), 0);
   const taskCompletionPercentage = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
 
