@@ -1,3 +1,8 @@
-export { default } from "next-auth/middleware"
+export { default } from "next-auth/middleware";
 
-export const config = { matcher: ["/properties/add", "/profile", "/properties/saved", "/messages"] }
+// Apply next-auth to ALL routes except specific exclusions
+// export const config = {
+//   matcher: ["/((?!api|_next/static|_next/image|favicon.ico|.*\\.(?:ico|png|svg|jpg|jpeg|gif|webp)$).*)"],
+// };
+
+export const config = { matcher: ["/:path*"] }
