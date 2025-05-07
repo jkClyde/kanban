@@ -3,49 +3,32 @@ import { useState } from 'react';
 import addTask from '@/app/actions/addTask'; 
 import { useToast } from '@/components/ToastProvider'; 
 
-export default function TaskForm({ onClose, projectId, services = [] }) {
+export default function TaskForm({ onClose, projectId }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
-  const [selectedServices, setSelectedServices] = useState([]);
-  const { showToast } = useToast(); // Use the toast hook
+  const [selectedCategories, setSelectedCategories] = useState([]);
+  const { showToast } = useToast();
   
-  // Ensure services is always an array
-  const availableServices = Array.isArray(services) ? services : [];
+  // Hardcoded available categories
+  const availableCategories = ["Frontend", "Backend", "UI/UX"];
   
-  // Handle form submission
   async function handleSubmit(formData) {
     setIsSubmitting(true);
     setError('');
     
     try {
-      // Add the projectId to the form data
       formData.append('projectId', projectId);
       
-      // Process selected services as tags
-      // First, remove any existing tags entries that might be present
+      // Remove any existing tags fields and add the selected categories as tags
       formData.delete('tags');
+      selectedCategories.forEach(category => {
+        formData.append('tags', category);
+      });
       
-      // Add each selected service as a tag
-      if (selectedServices.length > 0) {
-        // Find the service names for the selected IDs
-        const selectedServiceNames = availableServices
-          .filter(service => selectedServices.includes(service.id || service.name))
-          .map(service => service.name);
-          
-        // Add each service name as a tag
-        selectedServiceNames.forEach(name => {
-          formData.append('tags', name);
-        });
-      }
-      
-      // Call the server action
       const result = await addTask(formData);
       
       if (result.success) {
-        // Show toast notification
         showToast('Task added successfully', 'success');
-        
-        // Close the modal
         onClose();
       } else {
         setError(`Failed to add task: ${result.error}`);
@@ -58,12 +41,11 @@ export default function TaskForm({ onClose, projectId, services = [] }) {
     }
   }
 
-  // Toggle service selection
-  const toggleService = (serviceId) => {
-    setSelectedServices(prevSelected => 
-      prevSelected.includes(serviceId)
-        ? prevSelected.filter(id => id !== serviceId)
-        : [...prevSelected, serviceId]
+  const toggleCategory = (category) => {
+    setSelectedCategories(prev => 
+      prev.includes(category)
+        ? prev.filter(c => c !== category)
+        : [...prev, category]
     );
   };
   
@@ -76,7 +58,6 @@ export default function TaskForm({ onClose, projectId, services = [] }) {
       )}
       
       <form action={handleSubmit}>
-        {/* Hidden projectId field */}
         <input type="hidden" name="projectId" value={projectId} />
         
         <div className="grid grid-cols-1 gap-y-4">
@@ -166,44 +147,39 @@ export default function TaskForm({ onClose, projectId, services = [] }) {
                 type="date"
                 name="dueDate"
                 id="dueDate"
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-purple_bg focus:border-purple_bg"
+                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-purple_bg focus:border-purple_bg text-header"
               />
             </div>
           </div>
           
-          {/* Services Multi-Select for Tags */}
+          {/* Categories Multi-Select (will be sent as tags) */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Tags
+              Categories
             </label>
             <div className="flex flex-wrap gap-2 p-2 border border-gray-300 rounded-md min-h-12 bg-white">
-              {availableServices.length > 0 ? (
-                availableServices.map((service) => (
+              {availableCategories.length > 0 ? (
+                availableCategories.map((category) => (
                   <div 
-                    key={service.id || service.name} // Fallback to name if id is not available
-                    onClick={() => toggleService(service.id || service.name)}
+                    key={category}
+                    onClick={() => toggleCategory(category)}
                     className={`flex items-center cursor-pointer rounded-full px-3 py-1 text-sm transition-all ${
-                      selectedServices.includes(service.id || service.name)
-                        ? `bg-opacity-100 text-white`
-                        : `bg-opacity-20 text-gray-700`
+                      selectedCategories.includes(category)
+                        ? 'bg-purple_bg text-white'
+                        : 'bg-gray-100 text-gray-700'
                     }`}
-                    style={{ 
-                      backgroundColor: selectedServices.includes(service.id || service.name) 
-                        ? service.color 
-                        : `${service.color}33` // Adding transparency
-                    }}
                   >
-                    {service.name}
-                    {selectedServices.includes(service.id || service.name) && (
+                    {category}
+                    {selectedCategories.includes(category) && (
                       <span className="ml-1 font-bold">✓</span>
                     )}
                   </div>
                 ))
               ) : (
-                <p className="text-gray-500 text-sm">No tags available</p>
+                <p className="text-gray-500 text-sm">No categories available</p>
               )}
             </div>
-            <p className="text-xs text-gray-500 mt-1">Click to select/deselect tags</p>
+            <p className="text-xs text-gray-500 mt-1">Click to select/deselect categories (will be saved as tags)</p>
           </div>
         </div>
         
