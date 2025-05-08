@@ -1,4 +1,6 @@
 import UserProfilePage from "@/components/UserProfilePage"
+import connectDB from "@/config/database";
+import User from "@/models/User";
 
 // Dummy user matching the provided schema
 const dummyUser = {
@@ -10,9 +12,12 @@ const dummyUser = {
     updatedAt: new Date('2023-04-22')
   };
 
-const page = () => {
+const page = async () => {
+  await connectDB();
+  const user = await User.find({}).lean();
+  
   return (
-    <UserProfilePage user={dummyUser} />
+    <UserProfilePage userData={user[0]} />
 
   )
 }

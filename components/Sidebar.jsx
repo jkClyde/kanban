@@ -95,13 +95,16 @@ export const Sidebar = () => {
             setSelected={setSelected}
             open={open}
           /> */}
-          <Option
-            Icon={FiUser}
-            title="Account"
-            selected={selected}
-            setSelected={setSelected}
-            open={open}
-          />
+
+          <Link href="/account">
+            <Option
+              Icon={FiUser}
+              title="Profile"
+              selected={selected}
+              setSelected={setSelected}
+              open={open}
+            />
+          </Link>
         </div>
       </div>
 

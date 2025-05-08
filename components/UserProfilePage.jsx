@@ -31,26 +31,15 @@ const dummyProjects = [
   }
 ];
 
-export default function UserProfilePage({ user = null }) {
+export default function UserProfilePage({ userData  }) {
   const [activeTab, setActiveTab] = useState('projects');
   
-  // Default user if none provided
-  const userData = user || {
-    email: 'user@example.com',
-    username: 'exampleuser',
-    image: '/api/placeholder/100/100',
-    bookmarks: ['1', '2']
-  };
-  
-  // Get bookmarked projects
-  const bookmarkedProjects = dummyProjects.filter(project => 
-    userData.bookmarks.includes(project._id)
-  );
+ 
   
   return (
     <div className="bg-gray-100 min-h-screen pb-10 w-full rounded-[15px]">
       {/* Header */}
-      <div className="bg-sidebar h-32"></div>
+      <div className="bg-sidebar h-16 md:h-32"></div>
       
       {/* User Info Card */}
       <div className="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
@@ -66,31 +55,31 @@ export default function UserProfilePage({ user = null }) {
               </div>
               <div className="mt-4 sm:mt-0 sm:ml-6 text-center sm:text-left">
                 <h1 className="text-xl font-bold text-gray-900">@{userData.username}</h1>
-                <div className="flex items-center justify-center sm:justify-start mt-2 text-gray-500">
+                <div className="flex items-center justify-center sm:justify-ce mt-2 text-gray-500">
                   <Mail size={16} className="mr-1" />
                   <span className="text-sm">{userData.email}</span>
                 </div>
-                <div className="flex items-center justify-center sm:justify-start mt-1 text-gray-500">
+                {/* <div className="flex items-center justify-center sm:justify-start mt-1 text-gray-500">
                   <Bookmark size={16} className="mr-1" />
                   <span className="text-sm">{userData.bookmarks.length} bookmarks</span>
-                </div>
+                </div> */}
               </div>
             </div>
             
             {/* Navigation */}
             <div className="mt-6 border-t border-gray-200">
-              <div className="flex space-x-8 mt-4">
+              <div className="flex justify-center md:justify-start space-x-8 mt-4">
                 <button 
                   className={`${
                     activeTab === 'projects' 
-                      ? 'border-blue-500 text-blue-600' 
+                      ? 'border-blue_bg text-blue_bg' 
                       : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                   } whitespace-nowrap pb-4 px-1 border-b-2 font-medium text-sm`}
                   onClick={() => setActiveTab('projects')}
                 >
                   Projects
                 </button>
-                <button 
+                {/* <button 
                   className={`${
                     activeTab === 'bookmarks' 
                       ? 'border-blue-500 text-blue-600' 
@@ -99,7 +88,7 @@ export default function UserProfilePage({ user = null }) {
                   onClick={() => setActiveTab('bookmarks')}
                 >
                   Bookmarks
-                </button>
+                </button> */}
               </div>
             </div>
           </div>
