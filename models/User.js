@@ -14,10 +14,10 @@ const UserSchema = new Schema(
     image: {
       type: String,
     },
-    bookmarks: [
+    projects: [
       {
         type: Schema.Types.ObjectId,
-        ref: 'Property',
+        ref: 'Project',
       },
     ],
   },

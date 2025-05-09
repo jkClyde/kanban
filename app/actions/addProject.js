@@ -2,15 +2,22 @@
 import connectDB from '@/config/database';
 import Project from '@/models/Project';
 import { revalidatePath } from 'next/cache';
+import { getSessionUser } from '@/utils/getSessionUser';
 
-async function addProject(formData) {
+async function addProject(formData,userId) {
   try {
     await connectDB();
 
-    // Access all values for array fields
+    const sessionUser = await getSessionUser();
+
+    if (!sessionUser || !sessionUser.userId) {
+      throw new Error('User ID is required');
+    }
+
+    const { userId } = sessionUser;
+
     const tags = formData.getAll('tags');
 
-    // Create project data object
     const projectData = {
       name: formData.get('name'),
       description: formData.get('description'),
@@ -23,25 +30,23 @@ async function addProject(formData) {
       targetEndDate: formData.get('targetEndDate') ? new Date(formData.get('targetEndDate')) : null,
       actualEndDate: formData.get('actualEndDate') ? new Date(formData.get('actualEndDate')) : null,
       tags,
-      // techStack: formData.get('techStack')
+      owner: userId,
     };
 
     const newProject = new Project(projectData);
     await newProject.save();
 
-    // Revalidate the path to update the UI
     revalidatePath('/projects');
-    
-    // Convert MongoDB ObjectId to string before returning
-    return { 
-      success: true, 
-      projectId: newProject._id.toString() 
+
+    return {
+      success: true,
+      projectId: newProject._id.toString(),
     };
   } catch (error) {
     console.error('Error adding project:', error);
-    return { 
-      success: false, 
-      error: error.message 
+    return {
+      success: false,
+      error: error.message,
     };
   }
 }
