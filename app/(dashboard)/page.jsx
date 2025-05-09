@@ -26,8 +26,11 @@ const page = async () => {
   // Fetch projects owned by the current user
   const currentUser = await User.findOne({ email: session.user.email }).lean();
   const projects = await Project.find({ owner: currentUser._id }).lean();
+  // Extract project IDs for task filtering
+  const projectIds = projects.map(project => project._id);
+
   const services = await Service.find({}).lean();
-  const tasks = await Task.find({ status: "To Do" }).lean();
+  const tasks = await Task.find({ status: "To Do", projectId: { $in: projectIds } }).lean();
   const currentProject = await Current.find({}).lean();
   
   // Add a timestamp to help with debugging

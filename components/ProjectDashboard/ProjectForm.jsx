@@ -219,18 +219,18 @@ export default function ProjectForm({ onClose, services = [] }) {
               <input
                 type="date"
                 name="startDate"
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-purple_bg focus:border-purple_bg"
+                className="mt-1 text-gray-700 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-purple_bg focus:border-purple_bg"
               />
             </div>
             
             <div>
-              <label htmlFor="targetEndDate" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="targetEndDate" className=" block text-sm font-medium text-gray-700">
                 Target End Date
               </label>
               <input
                 type="date"
                 name="targetEndDate"
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-purple_bg focus:border-purple_bg"
+                className="mt-1 block w-full border text-gray-700 border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-purple_bg focus:border-purple_bg"
               />
             </div>
           </div>

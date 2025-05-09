@@ -1,8 +1,10 @@
-// File: app/projects/page.js
-// This is the main server component that fetches data
-
 import connectDB from "@/config/database"
 import Project from '@/models/Project'
+import User from "@/models/User";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+
+
 import ProjectsList from './ProjectList'
 
 export const metadata = {
@@ -12,7 +14,14 @@ export const metadata = {
 
 async function getProjects() {
   await connectDB()
-  return await Project.find({}).lean()
+
+  // Get user session
+  const session = await getServerSession(authOptions);
+
+  // Fetch projects owned by the current user
+  const currentUser = await User.findOne({ email: session.user.email }).lean();
+
+  return await  Project.find({ owner: currentUser._id }).lean();
 }
 
 export default async function ProjectsPage() {
