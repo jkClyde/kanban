@@ -88,14 +88,17 @@ export const Sidebar = () => {
               open={open}
             />
          </Link>
-          {/* <Option
-            Icon={FiBarChart}
-            title="Analytics"
-            selected={selected}
-            setSelected={setSelected}
-            open={open}
-          /> */}
-
+         
+          <Link href="/services">
+            <Option
+              Icon={FiBarChart}
+              title="Services"
+              selected={selected}
+              setSelected={setSelected}
+              open={open}
+            />
+          </Link>
+       
           <Link href="/account">
             <Option
               Icon={FiUser}

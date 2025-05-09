@@ -20,6 +20,12 @@ const UserSchema = new Schema(
         ref: 'Project',
       },
     ],
+    services: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'Service',
+      },
+    ],
   },
   {
     timestamps: true,

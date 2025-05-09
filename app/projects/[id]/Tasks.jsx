@@ -20,7 +20,7 @@ const priorityColors = {
 };
 
 const TasksTable = ({ tasks, projectId, ViewTaskAction }) => {
-  const [statusFilter, setStatusFilter] = useState('To Do');
+  const [statusFilter, setStatusFilter] = useState('all');
   const [priorityFilter, setPriorityFilter] = useState('all');
   const [showAddForm, setshowAddForm] = useState(false);
 
@@ -47,7 +47,7 @@ const TasksTable = ({ tasks, projectId, ViewTaskAction }) => {
               onChange={(e) => setStatusFilter(e.target.value)}
               value={statusFilter}
             >
-              <option value="all">All Statuses</option>
+              <option value="all">All </option>
               <option value="To Do">To Do</option>
               <option value="In Progress">In Progress</option>
               <option value="In Review">In Review</option>
@@ -66,7 +66,7 @@ const TasksTable = ({ tasks, projectId, ViewTaskAction }) => {
               onChange={(e) => setPriorityFilter(e.target.value)}
               value={priorityFilter}
             >
-              <option value="all">All Priorities</option>
+              <option value="all">All </option>
               <option value="Low">Low</option>
               <option value="Medium">Medium</option>
               <option value="High">High</option>
