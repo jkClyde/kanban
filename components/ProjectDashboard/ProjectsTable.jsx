@@ -67,13 +67,15 @@ export default function ProjectsTable({ projects, filteredProjects }) {
           <thead className="bg-sidebar text-white">
             <tr>
               <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Project</th>
+              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Description</th>
+
               <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Status</th>
               <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Priority</th>
               {/* <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Completion</th> */}
               {projects.some(p => p.startDate) && (
                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Timeline</th>
               )}
-              <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-white uppercase tracking-wider">Actions</th>
+              <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">Actions</th>
             </tr>
           </thead>
 
@@ -85,6 +87,8 @@ export default function ProjectsTable({ projects, filteredProjects }) {
                   <div className="flex items-center">
                     <div>
                       <div className="text-md font-medium text-gray-900">{project.name}</div>
+                      {/* <div className="text-sm  text-gray-600 py-1">{project.description}</div> */}
+
                       <div className="flex flex-wrap gap-2 mt-1">
                         {project.tags.map((tag, index) => {
                           const tagKey = tag.toLowerCase().trim();
@@ -106,6 +110,13 @@ export default function ProjectsTable({ projects, filteredProjects }) {
 
                     </div>
                   </div>
+                </td>
+
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <div className="text-md font-medium text-gray-900">{project.description}</div>
+                     
+                    
+                 
                 </td>
 
                 <td className="px-6 py-4 whitespace-nowrap">
