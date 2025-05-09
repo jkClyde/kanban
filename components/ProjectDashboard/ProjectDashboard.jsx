@@ -10,11 +10,31 @@ import DashboardFilters from './DashboardFilters';
 import ProjectsTable from './ProjectsTable';
 import ProjectCards from './ProjectCards';
 import CurrentProject from './CurrentProject';
+import { useSession, getProviders } from 'next-auth/react';
+
+
 
 export const ProjectDashboard = ({ initialProjects, services, currentProject, tasks }) => {
   const [projects, setProjects] = useState(initialProjects || []);
   const [filterStatus, setFilterStatus] = useState('All');
   const [searchTerm, setSearchTerm] = useState('');
+  const { data: session } = useSession();
+  const [providers, setProviders] = useState(null);
+  const userId = session?.user?.id;
+
+  console.log("ID NI USRER", userId);
+
+
+  useEffect(() => {
+    const setAuthProviders = async () => {
+      const res = await getProviders();
+      setProviders(res);
+    };
+  
+    setAuthProviders();
+  }, []);
+
+  
   
   // This effect will update the state when initialProjects changes
   useEffect(() => {
