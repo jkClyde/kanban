@@ -1,37 +1,14 @@
 'use client'
 
 import { useState } from 'react';
-import { Mail, User, Bookmark } from 'lucide-react';
+import { Globe, Calendar, Mail } from 'lucide-react';
+import moment from 'moment';
+import Link from 'next/link';
 
-// Dummy project data
-const dummyProjects = [
-  {
-    _id: '1',
-    title: 'Modern Apartment Complex',
-    description: 'Luxury apartments in downtown area with premium amenities',
-    location: 'Seattle, WA',
-    image: '/api/placeholder/400/250',
-    type: 'Rental'
-  },
-  {
-    _id: '2',
-    title: 'Suburban Family Home',
-    description: 'Spacious 4-bedroom home with large backyard',
-    location: 'Portland, OR',
-    image: '/api/placeholder/400/250',
-    type: 'Sale'
-  },
-  {
-    _id: '3',
-    title: 'Downtown Office Space',
-    description: 'Open concept office in business district',
-    location: 'San Francisco, CA',
-    image: '/api/placeholder/400/250',
-    type: 'Commercial'
-  }
-];
 
-export default function UserProfilePage({ userData  }) {
+
+
+export default function UserProfilePage({ userData , userProjects }) {
   const [activeTab, setActiveTab] = useState('projects');
   
  
@@ -100,7 +77,7 @@ export default function UserProfilePage({ userData  }) {
             <div>
               <h2 className="text-lg font-medium text-gray-900 mb-4">All Projects</h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {dummyProjects.map((project) => (
+                {userProjects.map((project) => (
                   <ProjectCard key={project._id} project={project} />
                 ))}
               </div>
@@ -130,29 +107,63 @@ export default function UserProfilePage({ userData  }) {
 // Project Card Component
 function ProjectCard({ project }) {
   return (
-    <div className="bg-white rounded-lg shadow overflow-hidden hover:shadow-md transition-shadow duration-300">
-      <div className="h-40">
-        <img 
-          src={project.image} 
-          alt={project.title} 
-          className="w-full h-full object-cover"
-        />
-      </div>
+    <div className="bg-white rounded-lg shadow hover:shadow-md transition-shadow duration-300 overflow-hidden">
       <div className="p-4">
         <div className="flex justify-between items-start">
-          <h3 className="text-md font-medium text-gray-900">{project.title}</h3>
-          <span className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">
-            {project.type}
+          <h3 className="text-lg font-semibold text-gray-900">{project.name}</h3>
+          <span className="text-xs px-2 py-1 bg-blue-100 text-blue-800 rounded">
+            {project.status}
           </span>
         </div>
-        <p className="mt-1 text-sm text-gray-500 line-clamp-2">{project.description}</p>
-        <div className="mt-2 flex items-center text-gray-500 text-xs">
-          <User size={14} className="mr-1" />
-          <span>{project.location}</span>
+
+        <p className="mt-2 text-sm text-gray-600 line-clamp-3">{project.description}</p>
+
+        <div className="mt-2 text-xs text-gray-500 flex flex-wrap gap-2">
+          <span className="bg-gray-200 text-gray-700 px-2 py-1 rounded">
+            Priority: {project.priority}
+          </span>
+          {project.tags?.length > 0 && (
+            <span className="bg-gray-100 px-2 py-1 rounded">
+              Tags: {project.tags.join(', ')}
+            </span>
+          )}
         </div>
-        <button className="mt-3 w-full bg-gray-100 hover:bg-gray-200 text-gray-800 font-medium py-2 px-4 rounded text-sm transition-colors duration-300">
+
+        <div className="mt-3 text-xs text-gray-500 space-y-1">
+          {project.domain && (
+            <div className="flex items-center gap-2">
+              <Globe size={14} /> <a href={project.domain} className="hover:underline">{project.domain}</a>
+            </div>
+          )}
+          {project.gitRepo && (
+            <div className="flex items-center gap-2">
+              <Github size={14} /> <a href={project.gitRepo} className="hover:underline">{project.gitRepo}</a>
+            </div>
+          )}
+          {project.startDate && (
+            <div className="flex items-center gap-2">
+              <Calendar size={14} /> Start: {moment(project.startDate).format('MMM D, YYYY')}
+            </div>
+          )}
+          {project.targetEndDate && (
+            <div className="flex items-center gap-2">
+              <Calendar size={14} /> Target End: {moment(project.targetEndDate).format('MMM D, YYYY')}
+            </div>
+          )}
+          {project.actualEndDate && (
+            <div className="flex items-center gap-2">
+              <Calendar size={14} /> Ended: {moment(project.actualEndDate).format('MMM D, YYYY')}
+            </div>
+          )}
+        </div>
+        
+
+      <Link href={`/projects/${project._id}`}>
+        <button className="mt-4 w-full bg-gray-100 hover:bg-gray-200 text-gray-800 font-medium py-2 px-4 rounded text-sm transition-colors duration-300">
           View Details
         </button>
+      </Link>
+
       </div>
     </div>
   );

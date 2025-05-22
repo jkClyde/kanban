@@ -1,23 +1,19 @@
 import UserProfilePage from "@/components/UserProfilePage"
 import connectDB from "@/config/database";
 import User from "@/models/User";
-
-// Dummy user matching the provided schema
-const dummyUser = {
-    email: 'john.doe@example.com',
-    username: 'johndoe',
-    image: '/api/placeholder/100/100',
-    bookmarks: ['1', '3'], // IDs of bookmarked projects
-    createdAt: new Date('2023-01-15'),
-    updatedAt: new Date('2023-04-22')
-  };
+import Project from "@/models/Project";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
 const page = async () => {
   await connectDB();
-  const user = await User.find({}).lean();
+  const session = await getServerSession(authOptions);
+  
+  const currentUser = await User.findOne({ email: session.user.email }).lean();
+  const userProjects = await Project.find({ owner: currentUser._id}).sort({ createdAt: -1 }).lean();
   
   return (
-    <UserProfilePage userData={user[0]} />
+    <UserProfilePage userData={currentUser} userProjects={userProjects}/>
 
   )
 }
