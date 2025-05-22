@@ -17,8 +17,6 @@ const page = async () => {
   
   // Get user session
   const session = await getServerSession(authOptions);
-  
-  // Check if user is logged in
   if (!session?.user?.email) {
     return <div>Please log in to view your projects</div>;
   }
@@ -26,17 +24,10 @@ const page = async () => {
   // Fetch projects owned by the current user
   const currentUser = await User.findOne({ email: session.user.email }).lean();
   const projects = await Project.find({ owner: currentUser._id }).lean();
-  // Extract project IDs for task filtering
   const projectIds = projects.map(project => project._id);
-
   const services = await Service.find({}).lean();
   const tasks = await Task.find({ status: "To Do", projectId: { $in: projectIds } }).lean();
   const currentProject = await Current.find({}).lean();
-  
-  // Add a timestamp to help with debugging
-  console.log(`Fetched ${projects.length} projects for user ${session.user.email} at ${new Date().toISOString()}`);
-  
-  // Stringify and parse to ensure plain objects
   const sanitizedProjects = JSON.parse(JSON.stringify(projects));
 
   return (

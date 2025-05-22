@@ -22,12 +22,6 @@ const ProjectSchema = new Schema(
       enum: ['Planning', 'In Progress', 'On Hold', 'Completed', 'Cancelled'],
       default: 'Planning',
     },
-    completion: {
-      type: Number,
-      min: 0,
-      max: 100,
-      default: 0,
-    },
     priority: {
       type: String,
       enum: ['Low', 'Medium', 'High', 'Critical'],

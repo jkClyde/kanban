@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect } from 'react';
-import Header from './Header';
 import SummaryCards from './SummaryCard';
 import StatusChart from './StatusChart';
 import BudgetChart from './BudgetChart';
@@ -18,31 +17,14 @@ export const ProjectDashboard = ({ initialProjects, services, currentProject, ta
   const [projects, setProjects] = useState(initialProjects || []);
   const [filterStatus, setFilterStatus] = useState('All');
   const [searchTerm, setSearchTerm] = useState('');
-  const { data: session } = useSession();
-  const [providers, setProviders] = useState(null);
-  const userId = session?.user?.id;
 
-  console.log("ID NI USRER", userId);
-
-
-  useEffect(() => {
-    const setAuthProviders = async () => {
-      const res = await getProviders();
-      setProviders(res);
-    };
-  
-    setAuthProviders();
-  }, []);
-
-  
-  
   // This effect will update the state when initialProjects changes
   useEffect(() => {
     if (initialProjects) {
       setProjects(initialProjects);
     }
-  }, [initialProjects]); // This dependency array ensures the effect runs when initialProjects changes
-  
+  }, [initialProjects]); 
+
   // Calculate summary metrics
   const totalProjects = projects.length;
   const completedProjects = projects.filter(p => p.status === 'Completed').length;
@@ -57,12 +39,7 @@ export const ProjectDashboard = ({ initialProjects, services, currentProject, ta
     return acc;
   }, {});
   
-  const budgetData = projects.map(project => ({
-    name: project.name.substring(0, 10) + (project.name.length > 10 ? '...' : ''),
-    Budget: project.budget || 0,
-    Spent: project.spent || 0
-  }));
-  
+
   // Filter projects
   const filteredProjects = projects.filter(project => {
     const matchesStatus = filterStatus === 'All' || project.status === filterStatus;

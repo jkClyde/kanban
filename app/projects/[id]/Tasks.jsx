@@ -114,7 +114,17 @@ const TasksTable = ({ tasks, projectId, ViewTaskAction }) => {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {filteredTasks.map((task) => (
+              {filteredTasks
+                .sort((a, b) => {
+                  const order = {
+                    'To Do': 1,
+                    'In Progress': 2,
+                    'In Review': 3,
+                    'Completed': 4,
+                  };
+                  return (order[a.status] || 99) - (order[b.status] || 99);
+                })
+                .map((task) => (
                 <tr key={task._id}>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-sm font-medium text-gray-900">{task.title}</div>

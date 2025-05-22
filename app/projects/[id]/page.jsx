@@ -15,7 +15,6 @@ async function getProject(id) {
   try {
     const project = await Project.findById(id);
     if (!project) return null;
-    // Convert Mongoose document to a plain JavaScript object
     return JSON.parse(JSON.stringify(project));
   } catch (error) {
     console.error('Error fetching project:', error);
@@ -26,7 +25,7 @@ async function getProject(id) {
 // Function to get tasks for a specific project
 async function getTasks() {
   await connectDB();
-  
+
   try {
     const tasks = await Tasks.find({}).lean();   
     return JSON.parse(JSON.stringify(tasks)); 
@@ -44,7 +43,6 @@ export default async function ProjectPage({ params }) {
     notFound();
   }
   
-  // Pass the project ID to getTasks function
   const tasks = await getTasks(params.id);
 
   // Calculate the completion date if available
