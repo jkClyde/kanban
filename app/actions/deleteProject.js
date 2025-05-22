@@ -1,6 +1,7 @@
 'use server';
 import connectDB from '@/config/database';
 import Project from '@/models/Project';
+import Task from '@/models/Tasks';
 import { revalidatePath } from 'next/cache';
 
 async function deleteProject(projectId) {
@@ -17,12 +18,15 @@ async function deleteProject(projectId) {
       };
     }
 
+    // Delete all tasks that belong to this project
+    await Task.deleteMany({ projectId });
+
     // Revalidate the path to update the UI
     revalidatePath('/projects');
     
     return { 
       success: true, 
-      message: 'Project deleted successfully' 
+      message: 'Project and related tasks deleted successfully' 
     };
   } catch (error) {
     console.error('Error deleting project:', error);
