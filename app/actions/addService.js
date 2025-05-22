@@ -2,7 +2,8 @@
 
 import connectDB from "@/config/database";
 import Service from "@/models/Services";
-import { revalidatePath } from "next/cache";
+import { revalidatePath } from 'next/cache';
+import { getSessionUser } from '@/utils/getSessionUser';
 
 
 export async function addService(formData) {
@@ -11,6 +12,16 @@ export async function addService(formData) {
    
     const name = formData.get('name');
     const color = formData.get('color') || '#3B82F6';
+
+    const sessionUser = await getSessionUser();
+
+     if (!sessionUser || !sessionUser.userId) {
+      throw new Error('User ID is required');
+    }
+
+    const { userId } = sessionUser;
+
+    
     
     if (!name) {
       throw new Error('Service name is required');
@@ -18,7 +29,9 @@ export async function addService(formData) {
     
     const newService = new Service({
       name: name.trim(),
-      color
+      color,
+      owner: userId,
+
     });
     
     await newService.save();

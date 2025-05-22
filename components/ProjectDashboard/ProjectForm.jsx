@@ -21,35 +21,22 @@ export default function ProjectForm({ onClose, services = [] }) {
     setError('');
     
     try {
-      // Process selected services as tags
-      // First, remove any existing tags entries that might be present
       formData.delete('tags');
-      
-      // Add each selected service as a tag
       if (selectedServices.length > 0) {
-        // Find the service names for the selected IDs
         const selectedServiceNames = availableServices
           .filter(service => selectedServices.includes(service.id || service.name))
           .map(service => service.name);
           
-        // Add each service name as a tag
         selectedServiceNames.forEach(name => {
           formData.append('tags', name);
         });
       }
       
-      // Call the server action
       const result = await addProject(formData);
       
       if (result.success) {
-         // Show toast notification
          showToast('Project added successfully', 'success');
-
-
-        // Close the modal
         onClose();
-        
-        // Redirect to the new project page
         router.push(`/projects/${result.projectId}`);
       } else {
         setError(`Failed to add project: ${result.error}`);
