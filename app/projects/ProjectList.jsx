@@ -1,36 +1,37 @@
 'use client'
 
-
 import { useState, useEffect, useTransition } from 'react'
-import { Search, Filter, ChevronLeft, ChevronRight } from "lucide-react"
+import { Search, Filter, ChevronLeft, ChevronRight, Plus } from "lucide-react"
 import ProjectCard from './ProjectCard'
 import FilterPanel from './FilterPanel'
 import { AnimatePresence, motion } from 'framer-motion'
-import { useSearchParams, useRouter } from 'next/navigation'
+import { useSearchParams } from 'next/navigation'
+import ProjectForm from '@/components/ProjectDashboard/ProjectForm'
 
-
-export default function ProjectsList({ initialProjects }) {
+export default function ProjectsList({ initialProjects, services }) {
   const [projects] = useState(initialProjects || [])
   const [searchTerm, setSearchTerm] = useState('')
   const [statusFilter, setStatusFilter] = useState('All')
-  // const [tagFilter, setTagFilter] = useState('All')
   const [sortField, setSortField] = useState('name')
   const [sortDirection, setSortDirection] = useState('asc')
   const [availableTags, setAvailableTags] = useState([])
   const [isPending, startTransition] = useTransition()
-  // GEt Search Params Tags
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  
+  // Function to close the modal
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+  
+  // Get Search Params Tags
   const searchParams = useSearchParams()
   const tagFromUrl = searchParams.get('tag')
   const [tagFilter, setTagFilter] = useState(tagFromUrl || 'All')
 
-
-  
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1)
   const itemsPerPage = 10
-
-
- 
 
   useEffect(() => {
     const tags = new Set()
@@ -53,7 +54,7 @@ export default function ProjectsList({ initialProjects }) {
   const filteredProjects = projects
     .filter(project => {
       const matchesSearch = project.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                            project.description.toLowerCase().includes(searchTerm.toLowerCase())
+                          project.description.toLowerCase().includes(searchTerm.toLowerCase())
     
       const matchesStatus = statusFilter === 'All' || project.status === statusFilter
       const matchesTag = tagFilter === 'All' || 
@@ -160,9 +161,18 @@ export default function ProjectsList({ initialProjects }) {
           availableTags={availableTags}
         />
       <div className="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
-        
-
-        <h1 className="text-2xl font-bold text-header">Projects ({filteredProjects.length})</h1>
+        <div className="flex items-center gap-4">
+          <h1 className="text-2xl font-bold text-header">Projects ({filteredProjects.length})</h1>
+            <button 
+            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-purple_bg hover:bg-indigo-700 focus:outline-none"
+            onClick={() => setIsModalOpen(true)}
+          >
+            <svg className="mr-2 h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
+            </svg>
+            New Project
+          </button>
+        </div>
         
         <div className="flex flex-col md:flex-row gap-2 w-full md:w-auto">
           {/* Search */}
@@ -178,6 +188,29 @@ export default function ProjectsList({ initialProjects }) {
           </div>
         </div>
       </div>
+
+      {/* Project Modal */}
+            {isModalOpen && (
+              <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-start md:items-center justify-center z-50 overflow-y-auto p-4">
+                <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl md:max-w-4xl my-8 md:my-0">
+                  <div className="flex justify-between items-center p-4 border-b">
+                    <h2 className="text-xl font-semibold text-gray-800">Add New Project</h2>
+                    <button 
+                      onClick={closeModal}
+                      className="text-gray-400 hover:text-gray-500"
+                    >
+                      <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                  </div>
+                  
+                  <div className="max-h-[80vh] overflow-y-auto">
+                    <ProjectForm onClose={closeModal} services={services}/>
+                  </div>
+                </div>
+              </div>
+            )}
       
       {/* Projects list */}
       {filteredProjects.length === 0 ? (
@@ -279,7 +312,10 @@ export default function ProjectsList({ initialProjects }) {
             </div>
           )}
         </>
+        
       )}
+
+    
     </>
   )
 }

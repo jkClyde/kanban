@@ -18,6 +18,8 @@ export const ProjectDashboard = ({ initialProjects, services, currentProject, ta
   const [filterStatus, setFilterStatus] = useState('All');
   const [searchTerm, setSearchTerm] = useState('');
 
+
+
   // This effect will update the state when initialProjects changes
   useEffect(() => {
     if (initialProjects) {

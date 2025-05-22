@@ -25,7 +25,7 @@ const page = async () => {
   const currentUser = await User.findOne({ email: session.user.email }).lean();
   const projects = await Project.find({ owner: currentUser._id }).lean();
   const projectIds = projects.map(project => project._id);
-  const services = await Service.find({}).lean();
+  const services = await Service.find({owner: currentUser._id }).lean();
   const tasks = await Task.find({ status: "To Do", projectId: { $in: projectIds } }).lean();
   const currentProject = await Current.find({}).lean();
   const sanitizedProjects = JSON.parse(JSON.stringify(projects));
