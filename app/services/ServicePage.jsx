@@ -245,7 +245,7 @@ export default function ServicesPage({ services: initialServices }) {
                 </div>
                 <h3 className="mt-4 text-lg font-medium text-gray-900">{service.name}</h3>
                 <div className="flex items-center mt-4 text-sm text-gray-500">
-                  <Link href={`/projects?service=${service._id}`}>
+                  <Link href={`/projects?tag=${service.name}`}>
                     <span className="text-indigo-600 font-medium hover:underline focus:outline-none cursor-pointer">
                       View related projects
                     </span>

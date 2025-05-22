@@ -1,31 +1,38 @@
 'use client'
-// File: components/projects/ProjectsList.js
-// This is the client component that handles UI, filtering, sorting and pagination
+
 
 import { useState, useEffect, useTransition } from 'react'
-import Link from "next/link"
-import { Search, Filter, ChevronDown, ChevronLeft, ChevronRight } from "lucide-react"
+import { Search, Filter, ChevronLeft, ChevronRight } from "lucide-react"
 import ProjectCard from './ProjectCard'
 import FilterPanel from './FilterPanel'
 import { AnimatePresence, motion } from 'framer-motion'
+import { useSearchParams, useRouter } from 'next/navigation'
+
 
 export default function ProjectsList({ initialProjects }) {
   const [projects] = useState(initialProjects || [])
   const [searchTerm, setSearchTerm] = useState('')
   const [statusFilter, setStatusFilter] = useState('All')
-  const [tagFilter, setTagFilter] = useState('All')
+  // const [tagFilter, setTagFilter] = useState('All')
   const [sortField, setSortField] = useState('name')
   const [sortDirection, setSortDirection] = useState('asc')
-  const [showFilters, setShowFilters] = useState(false)
   const [availableTags, setAvailableTags] = useState([])
   const [isPending, startTransition] = useTransition()
+  // GEt Search Params Tags
+  const searchParams = useSearchParams()
+  const tagFromUrl = searchParams.get('tag')
+  const [tagFilter, setTagFilter] = useState(tagFromUrl || 'All')
+
+
   
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1)
   const itemsPerPage = 10
 
+
+ 
+
   useEffect(() => {
-    // Extract all unique tags from projects
     const tags = new Set()
     projects.forEach(project => {
       if (project.tags && Array.isArray(project.tags)) {
@@ -45,17 +52,12 @@ export default function ProjectsList({ initialProjects }) {
   // Filter projects
   const filteredProjects = projects
     .filter(project => {
-      // Search filter
       const matchesSearch = project.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
                             project.description.toLowerCase().includes(searchTerm.toLowerCase())
-      
-      // Status filter
+    
       const matchesStatus = statusFilter === 'All' || project.status === statusFilter
-      
-      // Tag filter
       const matchesTag = tagFilter === 'All' || 
                         (project.tags && project.tags.includes(tagFilter))
-      
       return matchesSearch && matchesStatus && matchesTag
     })
     .sort((a, b) => {
@@ -115,47 +117,32 @@ export default function ProjectsList({ initialProjects }) {
   // Generate page numbers for pagination
   const getPageNumbers = () => {
     const pageNumbers = []
-    const maxVisiblePages = 5 // Show max 5 page buttons at once
+    const maxVisiblePages = 5 
     
     if (totalPages <= maxVisiblePages) {
-      // Show all pages if total is less than max visible
       for (let i = 1; i <= totalPages; i++) {
         pageNumbers.push(i)
       }
     } else {
-      // Always show first page
       pageNumbers.push(1)
-      
-      // Calculate start and end of current window
       let start = Math.max(2, currentPage - 1)
       let end = Math.min(totalPages - 1, currentPage + 1)
-      
-      // Adjust window if at edges
       if (currentPage <= 2) {
         end = 4
       } else if (currentPage >= totalPages - 1) {
         start = totalPages - 3
       }
-      
-      // Add ellipsis after first page if needed
       if (start > 2) {
         pageNumbers.push('...')
       }
-      
-      // Add pages in current window
       for (let i = start; i <= end; i++) {
         pageNumbers.push(i)
       }
-      
-      // Add ellipsis before last page if needed
       if (end < totalPages - 1) {
         pageNumbers.push('...')
       }
-      
-      // Always show last page
       pageNumbers.push(totalPages)
     }
-    
     return pageNumbers
   }
 
@@ -189,23 +176,9 @@ export default function ProjectsList({ initialProjects }) {
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
-          
-          {/* Filter toggle button */}
-          {/* <button 
-            className="flex items-center justify-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition"
-            onClick={() => setShowFilters(!showFilters)}
-          >
-            <Filter size={18} />
-            <span>Filters</span>
-            <ChevronDown size={18} className={`transform transition-transform ${showFilters ? 'rotate-180' : ''}`} />
-          </button> */}
         </div>
       </div>
       
-      {/* Filter panel */}
-     
-      
-    
       {/* Projects list */}
       {filteredProjects.length === 0 ? (
         <div className="text-center py-8">
